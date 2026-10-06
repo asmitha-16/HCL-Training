@@ -324,8 +324,6 @@ Responsibilities:
 
 The service manages different roles such as Student/Staff, Security Desk, and Admin.
 
----
-
 ### M2 – Reports / Lost and Found Service
 
 Service Name:
@@ -344,8 +342,6 @@ Responsibilities:
 
 This service manages the main Lost and Found domain.
 
----
-
 ### M3 – Matching Module
 
 Service:
@@ -359,10 +355,6 @@ The matching module compares lost and found items using:
 - Date
 
 The matching engine calculates a score and generates potential matches.
-
-The results can then be sorted according to the match score.
-
----
 
 ### M4 – Claims and Handover Service
 
@@ -382,8 +374,6 @@ Responsibilities:
 
 This service communicates with the item-service when it requires item information.
 
----
-
 ### M5 – Statistics Module
 
 Service:
@@ -395,8 +385,7 @@ Responsibilities:
 - Recovery statistics
 - Claim statistics
 - Handover statistics
-- Administrative reports
-- Recovery rate
+- Administrative reporting
 
 ---
 
@@ -488,8 +477,6 @@ Creates an ownership claim for a found item.
 
 ## Java Design Patterns
 
-The project also demonstrates important Java design patterns and modern Java features.
-
 ### Strategy Pattern
 
 MatchScoringStrategy is used for matching logic.
@@ -508,15 +495,11 @@ MatchScoringStrategy
 
 This makes the matching algorithm easier to modify or extend.
 
----
-
 ### Factory Pattern
 
 ItemFactory is used to centralize the creation of item-related objects.
 
 Instead of creating objects throughout different parts of the application, object creation can be handled through the factory.
-
----
 
 ### Builder Pattern
 
@@ -530,8 +513,6 @@ MatchResult can contain multiple pieces of information such as:
 - Match reason
 
 The Builder Pattern can be used to construct MatchResult objects cleanly.
-
----
 
 ### Java Records
 
@@ -547,8 +528,6 @@ public record MatchResult(
 
 Records reduce boilerplate code and are useful when an object is mainly used to carry data.
 
----
-
 ### Sealed Classes
 
 A sealed ItemStatus hierarchy can be used to restrict valid item states.
@@ -563,8 +542,6 @@ ItemStatus
     +-- Returned
 
 This provides better control over the valid states of an item.
-
----
 
 ### Java Streams
 
@@ -588,8 +565,6 @@ Return Results
 
 Streams make collection processing more concise and readable.
 
----
-
 ### CompletableFuture
 
 CompletableFuture can be used for asynchronous operations.
@@ -603,8 +578,6 @@ Create Report
         +---- Notification
 
 This can reduce unnecessary blocking of the main request.
-
----
 
 ### OpenFeign
 
@@ -622,6 +595,18 @@ item-service
        |
        v
 Item Information
+
+---
+
+## Security and Reliability
+
+- Role-based access control.
+- Authentication and authorization.
+- Protected found-item information.
+- Ownership verification.
+- Prevention of duplicate approved claims.
+- Claim and handover audit trail.
+- Controlled security-desk operations.
 
 ---
 
@@ -669,349 +654,48 @@ Authentication, authorization, and role-based permissions should protect restric
 
 ---
 
-## Repository Structure
+## Application Workflow
 
-CampusFound/
-|
-+-- auth-service/
-|   +-- src/
-|   +-- pom.xml
-|
-+-- item-service/
-|   +-- src/
-|   +-- pom.xml
-|
-+-- claim-service/
-|   +-- src/
-|   +-- pom.xml
-|
-+-- frontend/
-|   +-- src/
-|   +-- public/
-|   +-- package.json
-|
-+-- README.md
-+-- pom.xml
-
-The project repository can also contain the daily HCL training tasks separately from the main CampusFound implementation.
+User Reports Lost Item
+        |
+        v
+System Stores Lost Report
+        |
+        v
+Found Item Is Reported
+        |
+        v
+Matching Engine Compares Reports
+        |
+        v
+Match Score Is Calculated
+        |
+        v
+Potential Match Is Suggested
+        |
+        v
+Owner Submits Claim
+        |
+        v
+Ownership Questions
+        |
+        v
+Security Verification
+        |
+        v
+Claim Approved
+        |
+        v
+Security Records Handover
+        |
+        v
+Item Recovered
 
 ---
 
-## Agile and Scrum
+## Real-World Example
 
-CampusFound is developed using Agile/Scrum principles as part of the HCL training.
-
-The functional requirements are converted into user stories.
-
-Example:
-
-As a student or staff member, I want to report a lost item with relevant details so that the system can help me find a matching found item.
-
-Another example:
-
-As security personnel, I want to verify ownership claims so that only the legitimate owner receives the found item.
-
-The development workflow is:
-
-Requirement
-        |
-        v
-User Story
-        |
-        v
-Story Point Estimation
-        |
-        v
-Sprint Planning
-        |
-        v
-Development
-        |
-        v
-Testing
-        |
-        v
-Code Review
-        |
-        v
-Definition of Done
-        |
-        v
-Sprint Completion
-
----
-
-## User Stories
-
-### FR1 – Lost Item Report
-
-As a student or staff member, I want to report a lost item with relevant details so that the system can help me find a matching found item.
-
-### FR2 – Found Item Report
-
-As a student, staff member, or security personnel, I want to report a found item so that its owner can potentially recover it.
-
-### FR3 – Match Items
-
-As a user who reported a lost item, I want the system to suggest possible matches based on category, location, and date so that I can identify my item.
-
-### FR4 – Submit Claim
-
-As an owner, I want to submit a claim and answer verification questions so that I can prove ownership of a found item.
-
-### FR5 – Verify Handover
-
-As security personnel, I want to verify an approved claim and record the handover so that the item is returned securely.
-
-### FR6 – Prevent Duplicate Approval
-
-As an administrator, I want the system to prevent multiple approved claims for the same item so that fraudulent or conflicting claims are avoided.
-
-### FR7 – Expire Unclaimed Items
-
-As an administrator, I want unclaimed items to be flagged after 60 days so that they can be handled according to campus policy.
-
-### FR8 – View Statistics
-
-As an administrator, I want to view recovery statistics so that I can monitor the effectiveness of the Lost and Found system.
-
----
-
-## Story Point Estimation
-
-FR1 – Lost Item Report: 3 points
-
-FR2 – Found Item Report: 3 points
-
-FR3 – Matching: 8 points
-
-FR4 – Claims: 5 points
-
-FR5 – Handover: 5 points
-
-FR6 – Duplicate Claim Protection: 3 points
-
-FR7 – Item Expiry: 3 points
-
-FR8 – Statistics: 5 points
-
-The matching functionality has a higher estimate because it contains more complex business logic involving multiple attributes and score calculation.
-
----
-
-## Definition of Done
-
-A feature is considered complete when:
-
-- Implementation is completed.
-- Functional requirements are satisfied.
-- Validation is implemented.
-- Error handling is implemented.
-- Unit tests are written and passing.
-- API behavior is tested.
-- Database changes are completed where required.
-- Authentication and authorization are applied where required.
-- Code is committed to Git.
-- Code review is completed where applicable.
-- No critical defects remain.
-- Acceptance criteria are satisfied.
-
----
-
-## HCL Training Integration
-
-CampusFound is the main practical project used to apply the concepts learned during the HCL training.
-
-The daily training tasks are connected to different parts of the project.
-
-The overall learning path is:
-
-Java Platform Basics
-        |
-        v
-Object-Oriented Programming
-        |
-        v
-Collections and Generics
-        |
-        v
-Modern Java Features
-        |
-        v
-Design Patterns
-        |
-        v
-Spring Boot
-        |
-        v
-REST APIs
-        |
-        v
-JPA and Database
-        |
-        v
-Microservices
-        |
-        v
-OpenFeign
-        |
-        v
-Asynchronous Processing
-        |
-        v
-JUnit and Mockito
-        |
-        v
-CampusFound Implementation
-
-Examples:
-
-OOP
-→ Used for domain models, services, controllers, and business logic.
-
-Interfaces
-→ Used for defining contracts such as matching strategies.
-
-Collections
-→ Used to store and process reports, claims, and match suggestions.
-
-Generics
-→ Used to create reusable and type-safe components.
-
-Streams
-→ Used to filter and sort match suggestions.
-
-Records
-→ Used for immutable DTOs and result objects.
-
-Sealed Classes
-→ Used to control valid item states.
-
-Strategy Pattern
-→ Used for match-scoring logic.
-
-Factory Pattern
-→ Used for item object creation.
-
-Builder Pattern
-→ Used for constructing MatchResult objects.
-
-CompletableFuture
-→ Used for asynchronous processing.
-
-Spring Boot
-→ Used to build backend services.
-
-REST APIs
-→ Used for frontend-backend communication.
-
-OpenFeign
-→ Used for service-to-service communication.
-
-JPA
-→ Used for database persistence.
-
-JUnit and Mockito
-→ Used for testing.
-
-Agile/Scrum
-→ Used to organize development into user stories, sprints, estimates, standups, reviews, and retrospectives.
-
----
-
-## Daily Task Application
-
-Each HCL training task is connected to the CampusFound project.
-
-For example, Day 1 covers Java Platform Basics and Agile/Scrum.
-
-Java Platform Basics can be applied by understanding how the CampusFound Java services are compiled and executed.
-
-The flow is:
-
-.java Source Code
-        |
-        v
-javac Compiler
-        |
-        v
-Bytecode (.class)
-        |
-        v
-JVM
-        |
-        +-- Class Loader
-        +-- Runtime Data Areas
-        +-- Execution Engine
-        +-- Garbage Collector
-        |
-        v
-Application Execution
-
-The Agile/Scrum part is applied by converting the eight functional requirements into user stories, assigning story points, planning them into sprints, and defining a Definition of Done.
-
----
-
-## Daily-Life Problem Solved by CampusFound
-
-CampusFound is based on a common real-world campus problem.
-
-For example:
-
-A student loses a wallet in the college library.
-
-Normally, the student may have to:
-
-- Ask classmates.
-- Contact the security desk.
-- Search manually.
-- Check whether someone submitted the wallet.
-- Repeatedly visit the security desk.
-
-With CampusFound:
-
-Student reports the lost wallet
-        |
-        v
-System stores the report
-        |
-        v
-Another person finds the wallet
-        |
-        v
-Found item is registered
-        |
-        v
-Matching engine compares both reports
-        |
-        v
-Potential match is generated
-        |
-        v
-Student receives notification
-        |
-        v
-Student submits ownership claim
-        |
-        v
-Student answers verification questions
-        |
-        v
-Security verifies ownership
-        |
-        v
-Security records handover
-        |
-        v
-Student gets the wallet back
-
-This is how the project solves a practical daily campus problem.
-
----
-
-## Example Real-World Scenario
-
-Suppose a student loses a black backpack near the library.
+Suppose a student loses a black backpack near the college library.
 
 The student opens CampusFound and submits:
 
@@ -1033,7 +717,7 @@ The matching engine identifies the found backpack as a potential match and assig
 
 The original student receives a notification.
 
-The student submits a claim and answers ownership questions, for example:
+The student submits a claim and answers ownership questions such as:
 
 - What was inside the bag?
 - What is a unique mark on the bag?
@@ -1079,12 +763,10 @@ CampusFound provides a centralized, secure, and traceable platform for managing 
 
 The system reduces the manual effort required to recover lost belongings and provides a structured workflow from reporting to verified handover.
 
-The project demonstrates practical application of:
+The project demonstrates the practical application of:
 
 - Java
 - Object-Oriented Programming
-- Modern Java features
-- Design Patterns
 - Spring Boot
 - REST APIs
 - Microservices
@@ -1092,10 +774,9 @@ The project demonstrates practical application of:
 - JPA
 - OpenFeign
 - Asynchronous Programming
+- Design Patterns
 - JUnit
 - Mockito
-- Agile
-- Scrum
 - Git and GitHub
 
 ---
@@ -1132,9 +813,7 @@ Security Handover
         v
 Item Recovered
 
-The project is developed as part of the HCL Training program. Each daily training task introduces a technical or software-engineering concept that is applied to the CampusFound project.
-
-The overall goal is to build a practical, maintainable, secure, and scalable Lost and Found management system while applying Java, Spring Boot, REST APIs, microservices, database concepts, design patterns, testing, and Agile software development.
+CampusFound transforms the traditional campus Lost and Found process into a centralized, automated, secure, and traceable digital platform for faster and safer item recovery.
 
 ---
 
@@ -1144,5 +823,3 @@ ASMITHA B
 
 Bachelor of Engineering
 Computer Science and Design
-
-CampusFound transforms the traditional campus Lost and Found process into a centralized, automated, secure, and traceable digital platform for faster and safer item recovery.
