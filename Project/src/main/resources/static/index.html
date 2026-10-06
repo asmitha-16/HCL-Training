@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Lost & Found Platform | Enterprise Recovery System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Top Navigation & Role Switcher -->
+  <header class="app-header" role="banner">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Campus Lost & Found</h1>
+          <span class="brand-sub">Smart Match & Verified Handover Engine</span>
+        </div>
+      </div>
+
+      <!-- Live Role Switcher -->
+      <div class="header-controls">
+        <div class="role-selector-wrap" aria-label="Select User Persona">
+          <label for="roleSelector" class="role-label">Active Persona:</label>
+          <select id="roleSelector" class="role-select" aria-label="Switch User Persona">
+            <option value="USR-STU-01" selected>👤 Student: Asmitha B. (Computer Science)</option>
+            <option value="USR-STU-02">👤 Student: Rahul Sharma (Electrical Eng)</option>
+            <option value="USR-STF-01">🎓 Faculty: Prof. Rajesh Kumar (Physics)</option>
+            <option value="USR-SEC-01">🛡️ Security Desk: Officer Dan (South Gate)</option>
+            <option value="USR-SEC-02">🛡️ Security Desk: Officer Sarah (Library)</option>
+            <option value="USR-ADM-01">⚡ Campus Admin: Dr. Eleanor Vance</option>
+          </select>
+        </div>
+
+        <button id="notifBtn" class="icon-btn" aria-label="View notifications" title="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="notifBadge" class="badge notif-count">2</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Drawer -->
+  <aside id="notifDrawer" class="notif-drawer" aria-label="Notifications Panel" hidden>
+    <div class="drawer-header">
+      <h3>System Notifications</h3>
+      <button id="closeNotifBtn" class="close-btn" aria-label="Close notification panel">&times;</button>
+    </div>
+    <div id="notifList" class="notif-list">
+      <!-- Injected dynamically -->
+    </div>
+  </aside>
+
+  <!-- Main Container -->
+  <main class="main-layout" role="main">
+    <!-- Tab Navigation -->
+    <nav class="nav-tabs" role="tablist" aria-label="Application Views">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="feedTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Lost & Found Feed
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="reportLostTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        Report Lost Item
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="logFoundTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        Log Found Item & Photo
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="matchTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Auto-Matches (<span id="matchSubSec">< 1s</span>)
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="claimsTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Claims & Handover
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="adminTab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        Admin & Recovery KPI
+      </button>
+    </nav>
+
+    <!-- TAB 1: Feed & Exploration -->
+    <section id="feedTab" class="tab-panel active" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <h2>Campus Directory & Activity</h2>
+          <p class="panel-desc">Real-time status of all reported lost items and secured found inventory.</p>
+        </div>
+        <div class="feed-filters">
+          <input type="text" id="feedSearch" class="search-input" placeholder="Search keywords, brand, location..." aria-label="Search items">
+          <select id="categoryFilter" class="filter-select" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="ELECTRONICS">Electronics</option>
+            <option value="BAGS">Bags & Backpacks</option>
+            <option value="ID_CARDS">ID Cards & Wallets</option>
+            <option value="KEYS">Keys</option>
+            <option value="WEARABLES">Wearables</option>
+            <option value="BOOKS_STATIONERY">Books & Notes</option>
+          </select>
+          <div class="segmented-control" role="group" aria-label="Filter feed items">
+            <button class="seg-btn active" data-type="all">All</button>
+            <button class="seg-btn" data-type="lost">Lost Reports</button>
+            <button class="seg-btn" data-type="found">Found in Custody</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Grid -->
+      <div id="itemsGrid" class="items-grid" aria-live="polite">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- TAB 2: Report Lost Item (FR1) -->
+    <section id="reportLostTab" class="tab-panel" role="tabpanel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Report a Lost Item</h2>
+          <p>Provide specific identifying attributes. Our matching engine will immediately scan found inventory.</p>
+        </div>
+        <form id="lostItemForm" class="styled-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="lostTitle">Item Title *</label>
+              <input type="text" id="lostTitle" required placeholder="e.g. MacBook Air 13-inch M2">
+            </div>
+            <div class="form-group flex-1">
+              <label for="lostCategory">Category *</label>
+              <select id="lostCategory" required>
+                <option value="">Select Category...</option>
+                <!-- Populated via API -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="lostLocation">Last Seen Location *</label>
+              <select id="lostLocation" required>
+                <option value="">Select Building / Room...</option>
+                <!-- Populated via API -->
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="lostDate">Date Lost *</label>
+              <input type="date" id="lostDate" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="lostBrand">Brand / Manufacturer</label>
+              <input type="text" id="lostBrand" placeholder="e.g. Apple, Dell, Casio">
+            </div>
+            <div class="form-group flex-1">
+              <label for="lostColor">Primary Color</label>
+              <input type="text" id="lostColor" placeholder="e.g. Space Gray, Silver, Black">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lostDistinctive">Distinctive Features (Stickers, Scratches, Engravings)</label>
+            <input type="text" id="lostDistinctive" placeholder="e.g. GitHub sticker on cover, minor scratch near charging port">
+          </div>
+
+          <div class="form-group">
+            <label for="lostDesc">Detailed Description</label>
+            <textarea id="lostDesc" rows="3" placeholder="Describe where you left it, contents inside, any serial or case info..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="lostPhone">Contact Phone</label>
+              <input type="tel" id="lostPhone" placeholder="+1-555-0189">
+            </div>
+            <div class="form-group flex-1">
+              <label for="lostEmail">Contact Email</label>
+              <input type="email" id="lostEmail" placeholder="student@campus.edu">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+              Submit Lost Item Report (FR1)
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: Log Found Item & Privacy Masking (FR2 & NFR-P1) -->
+    <section id="logFoundTab" class="tab-panel" role="tabpanel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Log Found Item with Photo Privacy Shield</h2>
+          <p>Enforces <strong>NFR-P1</strong>: Sensitive details (student IDs, cards, serial numbers, faces) are obscured before public display.</p>
+        </div>
+        <form id="foundItemForm" class="styled-form">
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="foundTitle">Found Item Title *</label>
+              <input type="text" id="foundTitle" required placeholder="e.g. Apple MacBook Air (Found in study carrel)">
+            </div>
+            <div class="form-group flex-1">
+              <label for="foundCategory">Category *</label>
+              <select id="foundCategory" required>
+                <option value="">Select Category...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="foundLocation">Found Location *</label>
+              <select id="foundLocation" required>
+                <option value="">Select Building / Room...</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="foundDate">Date Found *</label>
+              <input type="date" id="foundDate" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="foundBrand">Brand</label>
+              <input type="text" id="foundBrand" placeholder="e.g. Apple, Fossil, Sony">
+            </div>
+            <div class="form-group flex-1">
+              <label for="foundColor">Color</label>
+              <input type="text" id="foundColor" placeholder="e.g. Space Gray, Brown">
+            </div>
+            <div class="form-group flex-1">
+              <label for="custodyLocker">Assigned Custody Locker *</label>
+              <input type="text" id="custodyLocker" required placeholder="e.g. LOCKER-B12, BIN-201">
+            </div>
+          </div>
+
+          <!-- NFR-P1: Photo Privacy Masking Tool -->
+          <div class="privacy-tool-card">
+            <div class="privacy-header">
+              <div class="privacy-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>NFR-P1 Photo Privacy Filter</span>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="maskSensitiveToggle" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Mask Sensitive Details</span>
+              </label>
+            </div>
+            <p class="privacy-note">When active, student IDs, card numbers, and personal photo screens are obscured in public views. Authorized security personnel retain access to verify at handover.</p>
+
+            <div class="photo-controls">
+              <button type="button" id="usePresetPhotoBtn" class="btn btn-secondary btn-sm">Use Sample Photo</button>
+              <input type="file" id="photoFileInput" accept="image/*" class="file-input">
+            </div>
+
+            <div class="photo-preview-box">
+              <canvas id="photoCanvas" width="400" height="250" class="privacy-canvas" aria-label="Item Photo Preview with Privacy Masking"></canvas>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="secretHints">Confidential Verification Hints (Hidden from Public)</label>
+            <input type="text" id="secretHints" placeholder="e.g. Name on ID card, specific scratch under trackpad, password prompt hint">
+            <small class="helper-text">Only security desk officers can view these hints during owner verification review.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="foundDesc">Public Description</label>
+            <textarea id="foundDesc" rows="2" placeholder="Brief general description suitable for public listing..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Secure & Log Found Item (FR2)
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: Auto-Match Suggestions (FR3 & NFR-P2) -->
+    <section id="matchTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <h2>Automated Match Engine</h2>
+          <p class="panel-desc">Calculates multi-factor similarity score via <code>MatchScoringStrategy</code>, sorted with Java Streams & executed asynchronously via <code>CompletableFuture</code> (<span class="perf-badge">NFR-P2 &lt; 1s</span>).</p>
+        </div>
+        <div class="match-controls">
+          <label for="matchReportSelect">Evaluate Lost Report:</label>
+          <select id="matchReportSelect" class="filter-select">
+            <option value="">Select a lost report to match...</option>
+          </select>
+          <button id="runMatchBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Execute Auto-Match
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Execution Telemetry -->
+      <div id="matchTelemetry" class="telemetry-bar" hidden>
+        <span class="telemetry-item">⚡ <strong>Engine:</strong> WeightedMatchScoringStrategy</span>
+        <span class="telemetry-item">⏱️ <strong>Latency:</strong> <span id="telemetryLatency">0 ms</span></span>
+        <span class="telemetry-item">📊 <strong>Candidate Pool:</strong> <span id="telemetryCandidates">0</span></span>
+        <span class="telemetry-item">🎯 <strong>Confidence Filter:</strong> Score &ge; 40%</span>
+      </div>
+
+      <!-- Match Results Cards -->
+      <div id="matchesContainer" class="matches-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 5: Claims & Handover Verification (FR4, FR5, FR6) -->
+    <section id="claimsTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <h2>Verified Claims & Desk Handover</h2>
+          <p class="panel-desc">Owner verification questions (FR4), strictly enforced single-claim approval guard (FR6), and security desk physical handover verification (FR5).</p>
+        </div>
+      </div>
+
+      <div class="claims-layout">
+        <!-- Claims Queue -->
+        <div class="claims-column">
+          <div class="column-header">
+            <h3>Ownership Claims Queue</h3>
+            <span id="claimCountBadge" class="badge">0</span>
+          </div>
+          <div id="claimsList" class="claims-list">
+            <!-- Claims dynamically loaded -->
+          </div>
+        </div>
+
+        <!-- Handover History -->
+        <div class="handovers-column">
+          <div class="column-header">
+            <h3>Completed Security Desk Handovers (FR5)</h3>
+            <span id="handoverCountBadge" class="badge">0</span>
+          </div>
+          <div id="handoversList" class="handovers-list">
+            <!-- Completed handovers -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: Admin Dashboard & Recovery KPI (FR8, FR7, NFR-P3) -->
+    <section id="adminTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <h2>Campus Safety Administration & Analytics</h2>
+          <p class="panel-desc">Real-time recovery metrics (FR8), 60-day unclaimed item expiry & donation batch management (FR7), and cryptographic fraud audit trail (NFR-P3).</p>
+        </div>
+        <div>
+          <button id="triggerExpiryBtn" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Run 60-Day Expiry Scan (FR7)
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Metric Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card highlight">
+          <div class="kpi-icon">🎯</div>
+          <div class="kpi-body">
+            <span class="kpi-title">Campus Recovery Rate (FR8)</span>
+            <span id="recoveryRateKPI" class="kpi-val">0.0%</span>
+            <span class="kpi-sub">Handed Over / Total Found Items</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📦</div>
+          <div class="kpi-body">
+            <span class="kpi-title">Total Found in Custody</span>
+            <span id="totalFoundKPI" class="kpi-val">0</span>
+            <span class="kpi-sub">Across 6 Campus Lockers</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🔍</div>
+          <div class="kpi-body">
+            <span class="kpi-title">Active Lost Reports</span>
+            <span id="totalLostKPI" class="kpi-val">0</span>
+            <span class="kpi-sub">Reported by Students & Staff</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🤝</div>
+          <div class="kpi-body">
+            <span class="kpi-title">Resolved Handovers</span>
+            <span id="totalHandoverKPI" class="kpi-val">0</span>
+            <span class="kpi-sub">Average Turnaround: <strong id="avgDaysKPI">1.5d</strong></span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🎁</div>
+          <div class="kpi-body">
+            <span class="kpi-title">60-Day Donated Items</span>
+            <span id="totalDonatedKPI" class="kpi-val">0</span>
+            <span class="kpi-sub">Campus Charity Partner Program</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-column Admin Section -->
+      <div class="admin-sections-grid">
+        <!-- Category & Location Breakdown -->
+        <div class="card">
+          <h3>Inventory Breakdown by Category</h3>
+          <div id="categoryChart" class="bar-chart-container">
+            <!-- Dynamic Chart Bars -->
+          </div>
+        </div>
+
+        <!-- NFR-P3: Tamper-Evident Fraud Audit Trail -->
+        <div class="card">
+          <div class="card-header-flex">
+            <div>
+              <h3>Tamper-Evident Claim Fraud Audit Trail (NFR-P3)</h3>
+              <p class="card-sub">SHA-256 cryptographic chain tracking claim reviews, officer actions, and anti-fraud blocks.</p>
+            </div>
+            <span class="badge badge-success">SHA-256 Active</span>
+          </div>
+          <div class="audit-table-wrap">
+            <table class="audit-table" aria-label="Cryptographic Fraud Audit Trail">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Event</th>
+                  <th>Entity</th>
+                  <th>Actor</th>
+                  <th>Summary</th>
+                  <th>SHA-256 Hash</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: Raise Claim (FR4) -->
+  <div id="claimModal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="claimModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="claimModalTitle">Raise Ownership Claim (FR4)</h3>
+        <button id="closeClaimModal" class="close-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="raiseClaimForm" class="modal-body">
+        <input type="hidden" id="claimFoundItemId">
+        <input type="hidden" id="claimLostReportId">
+
+        <div class="item-summary-box">
+          <h4 id="claimItemTitle">Item Title</h4>
+          <p id="claimItemDetails" class="text-muted">Category • Location</p>
+        </div>
+
+        <p class="modal-instruction">To prevent fraud, please answer the following verification questions about the item to prove ownership:</p>
+
+        <div id="dynamicQuestionsContainer">
+          <!-- Populated based on category verification questions -->
+        </div>
+
+        <div class="form-group">
+          <label for="proofReceipt">Proof of Purchase or Receipt Link (Optional)</label>
+          <input type="text" id="proofReceipt" placeholder="e.g. Receipt invoice number or image link">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelClaimBtn" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Verified Claim</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Security Desk Handover Verification (FR5) -->
+  <div id="handoverModal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="handoverModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="handoverModalTitle">Security Desk Handover Verification (FR5)</h3>
+        <button id="closeHandoverModal" class="close-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="recordHandoverForm" class="modal-body">
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="handoverClaimSelect" style="font-weight: 700; color: #38bdf8;">Select Verified Claim to Hand Over *</label>
+          <select id="handoverClaimSelect" required class="filter-select" style="width: 100%; background: #0f172a; font-size: 0.95rem; padding: 0.65rem;">
+            <option value="">Select an Approved Claim...</option>
+          </select>
+          <input type="hidden" id="handoverClaimId">
+        </div>
+
+        <div class="handover-checklist">
+          <h4>Officer Pre-Handover Checklist</h4>
+          <label class="check-item">
+            <input type="checkbox" required>
+            <span>Claimant physical appearance matches student/government photo ID</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" required>
+            <span>Claimant verified specific secret details (markings, unlock passcode, contents)</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" required>
+            <span>Physical possession released from custody locker</span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="recipientName">Recipient Full Name *</label>
+            <input type="text" id="recipientName" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="recipientIdNumber">Student ID / Gov ID Number *</label>
+            <input type="text" id="recipientIdNumber" required placeholder="e.g. STU-992144">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="officerName">Security Officer Name *</label>
+            <input type="text" id="officerName" value="Officer Daniel Hayes" required>
+          </div>
+          <div class="form-group flex-1">
+            <label for="releasedLocker">Locker / Bin ID Released</label>
+            <input type="text" id="releasedLocker" placeholder="e.g. LOCKER-E10">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="handoverNotes">Verification & Disposition Notes</label>
+          <textarea id="handoverNotes" rows="2" placeholder="e.g. Student ID inspected and signature recorded at counter. Item returned in good condition."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelHandoverBtn" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-success">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Complete Handover & Record Audit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <span>Campus Lost & Found Platform • Microservices Architecture: <code>auth-service</code>, <code>item-service</code>, <code>claim-service</code></span>
+      <span>Patterns: Strategy (<code>MatchScoringStrategy</code>), Factory (<code>ItemFactory</code>), Builder (<code>MatchResult</code>), Sealed <code>ItemStatus</code></span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
