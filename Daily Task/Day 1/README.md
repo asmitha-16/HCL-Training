@@ -14,6 +14,7 @@ Day 1 establishes the foundational engineering mechanics of the Java Virtual Mac
 2. **Bytecode Disassembly Analysis**: Inspected bytecode instructions using `javap -c PlatformInfo`.
 3. **Class Loading Lifecycle Observation**: Traced runtime class loading phases via `java -verbose:class PlatformInfo`.
 4. **Agile & Scrum Engineering Foundations**: Documented Sprint execution, User Story criteria (INVEST), Story Point sizing (Fibonacci scale), and Definition of Done (DoD).
+5. **Terminal Execution & javap Disassembly Evidence**: Captured high-resolution visual proof in `terminal_screenshot.png`.
 
 ---
 
