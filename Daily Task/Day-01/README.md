@@ -1,9 +1,7 @@
 # Day 1: Java Platform Basics + Agile/Scrum Basics
 
 **Track:** Java Platform Basics + Agile/Scrum Basics  
-**Student / Engineer:** Asmitha B ([@asmitha-16](https://github.com/asmitha-16))  
-**Sprint Day:** Day-01 (`day-1: java-platform-basics`)  
-**Status:** Completed & Verified  
+
 
 ---
 
