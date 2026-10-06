@@ -1,6 +1,7 @@
-# Campus Lost & Found Platform — Daily Training & Project Workspace
+# HCL Training — Java Full-Stack & Agile Sprint Workspace
 
 **Engineer:** Asmitha B ([@asmitha-16](https://github.com/asmitha-16))  
+**Organization:** HCL Training  
 **Repository Structure:**
 - `Folder 1: Daily Task/` — Daily hands-on coding exercises, platform verification, bytecode disassembly, and theoretical deep-dives.
 - `Folder 2: Project/` — Enterprise Campus Lost & Found Platform microservices codebase, comprehensive project README with 8 User Stories, story point estimation, Definition of Done, GoF patterns, and automated tests.
@@ -10,7 +11,7 @@
 ## 📁 Repository Directory Structure
 
 ```text
-Campus-Lost-and-Found/
+HCL Training/
 │
 ├── Daily Task/
 │   ├── README.md                      # Index tracker for all daily tasks
