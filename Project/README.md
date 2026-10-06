@@ -2,6 +2,8 @@
 
 **Domain:** Higher Education & Corporate Campus Asset Management  
 **Complexity:** Moderate (Distributed Microservice Boundaries & Event-Driven Flows)  
+**Live Deployed Portal:** [https://mindful-abode-commerce.lovable.app](https://mindful-abode-commerce.lovable.app)  
+**Auth Portal:** [https://mindful-abode-commerce.lovable.app/auth](https://mindful-abode-commerce.lovable.app/auth)  
 
 ---
 
