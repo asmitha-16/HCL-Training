@@ -244,7 +244,8 @@ A User Story is considered strictly **DONE** and eligible for sprint increment r
 
 ## 7. Agile Backlog Board (GitHub Projects / Jira Representation)
 
-**Live Board Link:** [https://github.com/asmitha-16/Campus-Lost-and-Found/projects/1](https://github.com/asmitha-16/Campus-Lost-and-Found/projects/1)
+**Live Backlog Board Link:** [https://github.com/users/asmitha-16/projects](https://github.com/users/asmitha-16/projects)  
+*(Repository Board: [https://github.com/asmitha-16/HCL-Training/projects](https://github.com/asmitha-16/HCL-Training/projects))*
 
 ```
 +--------------------------------------------------------------------------------------------------------------------------+
