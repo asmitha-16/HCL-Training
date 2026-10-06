@@ -2,9 +2,6 @@
 
 **Domain:** Higher Education & Corporate Campus Asset Management  
 **Complexity:** Moderate (Distributed Microservice Boundaries & Event-Driven Flows)  
-**Lead Engineer / Product Owner:** Asmitha B ([@asmitha-16](https://github.com/asmitha-16))  
-**Repository:** [Campus-Lost-and-Found](https://github.com/asmitha-16/Campus-Lost-and-Found)  
-**Agile Project Board:** [GitHub Projects / Jira Board](https://github.com/asmitha-16/Campus-Lost-and-Found/projects/1)  
 
 ---
 
