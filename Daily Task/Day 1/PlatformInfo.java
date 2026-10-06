@@ -1,14 +1,52 @@
 /**
  * PlatformInfo.java
  *
- * Day 1 Hands-on Task: Java Platform Basics
- * Demonstrates runtime inspection of JVM environment, OS properties,
- * processor availability, and memory heap statistics without relying on an IDE.
+ * Day 1 Task: Java Platform Basics
+ * -------------------------------------------------------------
+ * 1. Queries runtime parameters: java.version, os.name, available processors, max/free heap.
+ * 2. Compiles and executes via terminal without IDE:
+ *      javac PlatformInfo.java
+ *      java PlatformInfo
+ * 3. Bytecode disassembly inspected via javap -c:
+ *      javap -c PlatformInfo
+ * 4. Runtime class loading verified via:
+ *      java -verbose:class PlatformInfo
  *
- * Compilation: javac PlatformInfo.java
- * Execution:   java PlatformInfo
- * Disassembly: javap -c PlatformInfo
- * Verbose:     java -verbose:class PlatformInfo
+ * -------------------------------------------------------------
+ * SAMPLE TERMINAL OUTPUT:
+ * -------------------------------------------------------------
+ * [1] JAVA ENVIRONMENT
+ *   - Java Version        : 25.0.1
+ *   - Java Vendor         : Oracle Corporation
+ *   - Java Home           : C:\Program Files\Java\jdk-25
+ *   - JVM Name            : Java HotSpot(TM) 64-Bit Server VM
+ * 
+ * [2] OPERATING SYSTEM
+ *   - OS Name             : Windows 11
+ *   - Architecture        : amd64
+ * 
+ * [3] HARDWARE CONCURRENCY
+ *   - Available Processors: 12 logical core(s)
+ * 
+ * [4] RUNTIME HEAP MEMORY METRICS
+ *   - Max Heap Memory     : 3.84 GB (3928.00 MB) (4118806528 bytes)
+ *   - Total Heap Allocated: 248.00 MB (260046848 bytes)
+ *   - Free Heap Memory    : 244.85 MB (256747872 bytes)
+ *   - Used Heap Memory    : 3.15 MB (3298976 bytes)
+ *
+ * -------------------------------------------------------------
+ * DISASSEMBLED BYTECODE (javap -c PlatformInfo snippet):
+ * -------------------------------------------------------------
+ *   public static void main(java.lang.String[]);
+ *     Code:
+ *        0: getstatic     #7   // Field java/lang/System.out:Ljava/io/PrintStream;
+ *        3: ldc           #13  // String ===============================================================
+ *        5: invokevirtual #15  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+ *       24: ldc           #23  // String java.version
+ *       26: invokestatic  #25  // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+ *       29: astore_1
+ *       68: invokedynamic #39  // InvokeDynamic #0:makeConcatWithConstants
+ *       73: invokevirtual #15  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
  */
 public class PlatformInfo {
 
