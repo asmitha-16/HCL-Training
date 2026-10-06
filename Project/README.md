@@ -217,28 +217,20 @@ All 8 Functional Requirements from the Project Catalog have been converted into 
 
 ## 6. Definition of Done (DoD)
 
-A User Story is considered strictly **DONE** and eligible for sprint increment release only when all of the following gates are satisfied:
+A user story is considered complete when:
 
-```
-[x] 1. Architecture & Design Patterns
-    - GoF patterns (Strategy, Factory, Builder) adhered to where specified.
-    - Modern Java constructs utilized (Records, Sealed Interfaces, Pattern Matching).
-[x] 2. Acceptance Criteria Fulfillment
-    - 100% of Given-When-Then criteria validated via unit/integration tests.
-[x] 3. Testing & Verification Gates
-    - Automated unit test suite passes with zero regressions.
-    - Concurrency test verifies race-condition prevention (US-06).
-    - Sub-second performance benchmark verified for matching (< 1,000 ms, US-03).
-[x] 4. Code Quality & Peer Review
-    - Code passes code review with zero unresolved blockers.
-    - Clean separation of microservice boundaries maintained.
-[x] 5. Security & Privacy Compliance
-    - Public feeds sanitize sensitive photo details (NFR-P1).
-    - Immutable SHA-256 cryptographic audit trail records state changes (NFR-P3).
-[x] 6. Documentation & Version Control
-    - REST endpoints and payload contracts documented.
-    - Changes committed with clear semantic commit messages and pushed to branch.
-```
+- [x] The required functionality is implemented.
+- [x] Business rules are validated.
+- [x] Appropriate authorization is enforced.
+- [x] API responses and error handling are implemented.
+- [x] Database changes are completed where required.
+- [x] Unit/integration tests are added where applicable.
+- [x] The functionality is manually tested.
+- [x] No known critical defects remain.
+- [x] Code follows the project's coding standards.
+- [x] Changes are reviewed.
+- [x] Documentation is updated where necessary.
+- [x] Changes are committed and pushed to the Git repository.
 
 ---
 
