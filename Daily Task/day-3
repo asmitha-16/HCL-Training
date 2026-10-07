@@ -1,0 +1,338 @@
+# Day 03 — Java OOP & Domain Modeling
+
+## Objective
+
+Convert the Campus Lost & Found Portal requirements into Java domain models using Object-Oriented Programming concepts. The domain models represent users, lost reports, found items, claims, handovers, locations, categories, and item statuses that are required for the CampusFound workflow.
+
+---
+
+## Domain Models
+
+### DM-01 — User Model
+
+Create a `User` class to represent Students, Staff members, Security Officers, and Admins.
+
+The model contains:
+
+- User ID
+- Name
+- Email
+- Phone number
+- User role
+
+The role is represented using an enum to restrict users to valid system roles.
+
+---
+
+### DM-02 — Lost Report Model
+
+Create a `LostReport` class to represent an item reported as lost.
+
+The model contains:
+
+- Report ID
+- Item name
+- Category
+- Last known location
+- Lost date
+- Brand
+- Color
+- Description
+- Distinctive markings
+- Owner
+
+This model provides the information required by the matching module to identify potential found-item matches.
+
+---
+
+### DM-03 — Found Item Model
+
+Create a `FoundItem` class to represent an item registered as found.
+
+The model contains:
+
+- Item ID
+- Item name
+- Category
+- Found location
+- Found date
+- Brand
+- Color
+- Description
+- Photo
+- Storage locker
+- Item status
+
+The item status represents the current stage of the found item lifecycle.
+
+---
+
+### DM-04 — Claim Model
+
+Create a `Claim` class to represent an ownership claim submitted for a found item.
+
+The model contains:
+
+- Claim ID
+- Found item
+- Claimant
+- Verification answers
+- Claim status
+
+The claim status can be:
+
+`PENDING` → `APPROVED` / `REJECTED`
+
+This model supports the ownership verification process before an item is released.
+
+---
+
+### DM-05 — Handover Model
+
+Create a `Handover` class to represent the physical release of a verified item.
+
+The model contains:
+
+- Handover ID
+- Found item
+- Approved claim
+- Security officer
+- Handover date
+- Signature confirmation
+
+The handover model maintains the information required to record the final transfer of custody.
+
+---
+
+## Enums
+
+### User Role
+
+The system supports the following roles:
+
+`STUDENT`
+
+`STAFF`
+
+`SECURITY_OFFICER`
+
+`ADMIN`
+
+---
+
+### Item Category
+
+Items are classified using predefined categories:
+
+`ELECTRONICS`
+
+`WALLET_CARD`
+
+`KEYS`
+
+`BAGS`
+
+`ACADEMIC_ID`
+
+`CLOTHING`
+
+`ACCESSORIES`
+
+`OTHER`
+
+---
+
+### Item Status
+
+The item lifecycle is represented as:
+
+`LOST`
+
+`FOUND`
+
+`CLAIMED`
+
+`RETURNED`
+
+`EXPIRED`
+
+---
+
+### Claim Status
+
+Claims can have the following states:
+
+`PENDING`
+
+`APPROVED`
+
+`REJECTED`
+
+---
+
+## OOP Concepts
+
+### Encapsulation
+
+Keep domain-model fields private and provide controlled access through methods.
+
+Example:
+
+`private String itemName;`
+
+`private ItemStatus status;`
+
+This prevents direct modification of important object data.
+
+---
+
+### Abstraction
+
+Expose business operations through meaningful methods instead of directly modifying internal values.
+
+For example:
+
+`approve()`
+
+`reject()`
+
+`recordSignature()`
+
+This keeps the internal implementation of the domain object hidden.
+
+---
+
+### Composition
+
+Represent real-world relationships between CampusFound entities.
+
+Examples:
+
+`LostReport → User`
+
+`LostReport → Location`
+
+`FoundItem → Location`
+
+`Claim → User`
+
+`Claim → FoundItem`
+
+`Handover → Claim`
+
+`Handover → FoundItem`
+
+---
+
+## Item Lifecycle
+
+The domain models support the complete item lifecycle:
+
+`Lost Report`
+
+↓
+
+`Found Item`
+
+↓
+
+`Claim`
+
+↓
+
+`Approved`
+
+↓
+
+`Handover`
+
+↓
+
+`Returned`
+
+For items that remain unclaimed:
+
+`Found Item`
+
+↓
+
+`60 Days`
+
+↓
+
+`Expired`
+
+↓
+
+`Donation / Disposal`
+
+---
+
+## CampusFound Object Flow
+
+A typical CampusFound operation is represented as:
+
+`Student / Staff`
+
+↓
+
+`LostReport`
+
+↓
+
+`Matching`
+
+↓
+
+`FoundItem`
+
+↓
+
+`Claim`
+
+↓
+
+`Verification`
+
+↓
+
+`Security Officer`
+
+↓
+
+`Handover`
+
+↓
+
+`Returned Item`
+
+---
+
+## Acceptance Criteria
+
+Day 3 is considered complete when:
+
+- User domain model is implemented.
+- Lost report domain model is implemented.
+- Found item domain model is implemented.
+- Claim domain model is implemented.
+- Handover domain model is implemented.
+- Location model is implemented.
+- User roles are represented using an enum.
+- Item categories are represented using an enum.
+- Item statuses are represented using an enum.
+- Claim statuses are represented using an enum.
+- Domain fields are properly encapsulated.
+- Constructors are implemented.
+- Required methods are implemented.
+- Relationships between domain models are represented.
+- Sample CampusFound objects can be created successfully.
+- Java code compiles and runs successfully.
+- The item lifecycle is represented correctly.
+- Changes are committed and pushed to the Git repository.
+
+---
+
+## Key Learning
+
+Through this task, the CampusFound functional requirements were converted into structured Java domain models. The main real-world entities of the Lost and Found system were represented using classes, objects, enums, encapsulation, abstraction, and composition. These domain models provide the foundation for implementing the matching, ownership verification, claim management, handover, and item-expiry functionality of CampusFound.
