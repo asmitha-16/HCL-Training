@@ -1,0 +1,7 @@
+username,fullName,email,department,role
+alan_turing,Prof. Alan Turing,turing@campus.edu,Computer Science,FACULTY
+ada_lovelace,Dr. Ada Lovelace,lovelace@campus.edu,Mathematics,FACULTY
+john_staff,John Smith,jsmith@campus.edu,Facilities,STAFF
+alice_student,Alice Williams,alice@student.campus.edu,Data Science,STUDENT
+bob_student,Bob Johnson,bob@student.campus.edu,Electrical Eng,STUDENT
+charlie_student,Charlie Brown,charlie@student.campus.edu,Physics,STUDENT

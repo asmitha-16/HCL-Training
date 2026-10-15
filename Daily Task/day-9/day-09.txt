@@ -1,0 +1,37 @@
+================================================================================
+DAY 9: GENERICS & I/O
+CAMPUS LOST AND FOUND PORTAL
+================================================================================
+
+TOPIC:
+Generics basics; bounded types; wildcards (PECS); try-with-resources; AutoCloseable
+
+CONCEPTS IMPLEMENTED:
+1. Generic CrudRepository<T, ID> interface + InMemoryRepository<T, ID>
+   Reused for all entities (LostItem, FoundItem, User)
+2. Type Erasure: How bytecode erases <T> to BaseEntity/Object with synthetic casts
+3. Bounded Types:
+   - Box<T extends Number> with toDouble() and isGreaterThan()
+   - <T extends Comparable<T>> Optional<T> findMax(List<T>)
+4. Generic Pair<K, V> for item correlation matches
+5. Wildcards & PECS Principle (Producer Extends, Consumer Super):
+   copyEntities(List<? extends BaseEntity> src, List<? super BaseEntity> dest)
+6. try-with-resources CSV data loading (lost_items.csv, found_items.csv, users.csv)
+7. Custom AutoCloseable (LockerAuditSession) demonstrating exact LIFO close order
+
+SOURCE & DATA FILES IN THIS FOLDER:
+- CampusGenericsApp.java  (Complete executable Java application)
+- lost_items.csv          (Seed data for lost items)
+- found_items.csv         (Seed data for found items)
+- users.csv               (Seed data for campus users)
+- README.md               (Full Markdown documentation report)
+- day-09.txt              (This text summary)
+- console_output.txt      (Execution log of menu options 1-6)
+- run.bat / run.ps1       (One-click execution launchers)
+
+HOW TO RUN:
+cmd> run.bat
+powershell> .\run.ps1
+javac -d bin CampusGenericsApp.java
+java -cp bin com.campus.lostandfound.CampusGenericsApp
+================================================================================

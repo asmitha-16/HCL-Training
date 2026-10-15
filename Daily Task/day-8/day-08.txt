@@ -1,0 +1,35 @@
+================================================================================
+DAY 8: COLLECTIONS FRAMEWORK — PART 2
+CAMPUS LOST AND FOUND PORTAL
+================================================================================
+
+TOPIC:
+Map; Comparable & Comparator; HashMap vs TreeMap; FR4–FR6
+
+CONCEPTS IMPLEMENTED:
+1. HashMap, LinkedHashMap, TreeMap comparison & decision matrix
+2. Fast O(1) primary key lookups for LostItem, FoundItem, and Claim
+3. Frequency counting with Map.merge()
+4. TreeMap sorted reports (Category inventory and Department valuation)
+5. Comparable (natural ID order) vs Comparator chaining:
+   - Comparator.comparing(LostItem::getEstimatedValue).reversed().thenComparing(LostItem::getLostDate)
+   - Comparator.comparing(Claim::getClaimantRole).thenComparing(Claim::getClaimDate)
+6. Missing-hashCode bug demonstration and fix (equals/hashCode contract)
+7. Functional Requirements FR4–FR6:
+   - FR4: Automated Item Matching & Correlation Engine
+   - FR5: Verification Challenge Quiz Authentication (O(1))
+   - FR6: Handover Resolution & Atomic Status Updates
+
+SOURCE FILES IN THIS FOLDER:
+- CampusDirectory.java  (Complete executable Java application)
+- README.md             (Full Markdown documentation report)
+- day-08.txt            (This text summary)
+- console_output.txt    (Execution log of menu options 1-9)
+- run.bat / run.ps1     (One-click execution launchers)
+
+HOW TO RUN:
+cmd> run.bat
+powershell> .\run.ps1
+javac -d bin CampusDirectory.java
+java -cp bin com.campus.lostandfound.CampusDirectory
+================================================================================

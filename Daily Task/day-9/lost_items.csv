@@ -1,0 +1,7 @@
+id,title,category,location,lostDate,estimatedValue,reporterUsername
+LOST-1001,ThinkPad X1 Carbon,Electronics,Library 2nd Floor,2026-10-11,1400.00,alice_student
+LOST-1002,Leather Wallet,Personal,Campus Cafeteria,2026-10-12,65.00,bob_student
+LOST-1003,Wireless Earbuds,Electronics,Gymnasium Locker Room,2026-10-13,150.00,charlie_student
+LOST-1004,Research Lab Notebook,Documents,Science Lab 3,2026-10-10,45.00,alan_turing
+LOST-1005,MacBook Pro 16,Electronics,Computer Center,2026-10-14,2400.00,ada_lovelace
+LOST-1006,Scientific Calculator,Electronics,Math Hall 102,2026-10-15,85.00,alice_student
