@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.campus.lostandfound</groupId>
+    <artifactId>campus-day3-controlflow</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Campus Lost and Found - Day 3 Control Flow</name>
+    <description>Day 3 Maven Project with Control Flow and Interactive Menu</description>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <app.environment>development</app.environment>
+        <app.debug.enabled>true</app.debug.enabled>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <app.environment>development</app.environment>
+                <app.debug.enabled>true</app.debug.enabled>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <app.environment>production</app.environment>
+                <app.debug.enabled>false</app.debug.enabled>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

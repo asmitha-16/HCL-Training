@@ -407,34 +407,23 @@ Sprint 8 (Days 85–96): Docker, Jenkins CI/CD, Kubernetes, OWASP Hardening, Fin
 
 ## 8. Verification & How to Run
 
-### Option 1: One-Click Execution (Windows CMD)
-```cmd
-run.bat
-```
-
-### Option 2: PowerShell Execution
-```powershell
-.\run.ps1
-```
-
-### Option 3: Direct Command-Line Toolchain
+### Command-Line Execution
 ```bash
 # 1. Compile directly with javac
-javac -d bin PlatformInfo.java
+javac PlatformInfo.java
 
 # 2. Run terminal executable
-java -cp bin PlatformInfo
+java PlatformInfo
 
 # 3. Disassemble bytecode to inspect instructions
-& "C:\Program Files\Java\jdk-25\bin\javap.exe" -c -p -cp bin PlatformInfo
+javap -c -p PlatformInfo
 
 # 4. Trace classloader execution
-java -verbose:class -cp bin PlatformInfo
+java -verbose:class PlatformInfo
 ```
 
-All generated output files are committed in this directory:
+All required deliverables are maintained in this directory:
 - [`PlatformInfo.java`](PlatformInfo.java) — Java source file
-- [`terminal_output.txt`](terminal_output.txt) — Captured live terminal execution output
-- [`javap_output.txt`](javap_output.txt) — 375-line disassembled bytecode listing
-- [`classloading_trace.txt`](classloading_trace.txt) — JVM classloader initialization trace
+- [`README.md`](README.md) — Comprehensive technical report, user stories, DoD, and NFR matrix
 - [`day-01.txt`](day-01.txt) — Quick-reference summary card
+

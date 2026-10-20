@@ -24,12 +24,8 @@ SOURCE FILES IN THIS FOLDER:
 - CampusDirectory.java  (Complete executable Java application)
 - README.md             (Full Markdown documentation report)
 - day-08.txt            (This text summary)
-- console_output.txt    (Execution log of menu options 1-9)
-- run.bat / run.ps1     (One-click execution launchers)
 
 HOW TO RUN:
-cmd> run.bat
-powershell> .\run.ps1
 javac -d bin CampusDirectory.java
 java -cp bin com.campus.lostandfound.CampusDirectory
 ================================================================================

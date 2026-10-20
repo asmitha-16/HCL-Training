@@ -33,16 +33,9 @@ SOURCE FILES IN THIS FOLDER:
 - PlatformInfo.java       (Terminal-executable Java environment and capacity checker)
 - README.md               (Comprehensive technical report, user stories, DoD, and NFR matrix)
 - day-01.txt              (This summary file)
-- terminal_output.txt     (Live console execution log of PlatformInfo)
-- javap_output.txt        (Full disassembled bytecode via javap -c -p)
-- classloading_trace.txt  (JVM classloading verification via -verbose:class)
-- run.bat / run.ps1       (One-click execution launchers)
-- bin/PlatformInfo.class  (Compiled bytecode file)
 
 HOW TO RUN:
-cmd> run.bat
-powershell> .\run.ps1
-javac -d bin PlatformInfo.java
-java -cp bin PlatformInfo
-& "C:\Program Files\Java\jdk-25\bin\javap.exe" -c -p -cp bin PlatformInfo
+javac PlatformInfo.java
+java PlatformInfo
+javap -c -p PlatformInfo
 ================================================================================

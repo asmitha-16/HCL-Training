@@ -143,24 +143,15 @@ Daily Task/
 
 ## 6. How to Compile and Run
 
-### Option 1: Run the Interactive Console Application
-```powershell
-# Using PowerShell
-cd "C:\Users\ASMITHA\.gemini\antigravity\scratch\HCL Training\Daily Task\day 7"
-.\run.ps1
-```
-Or with Windows Batch:
-```cmd
-run.bat
-```
-
-### Option 2: Run the Performance Benchmark Directly
-```powershell
-.\benchmark.ps1
-```
-Or with Java directly:
+### Compile and Run Directly with Java
 ```bash
+# Compile all source files
 javac -d bin src/com/campus/lostandfound/*/*.java
+
+# Run the interactive console application (FR1-FR3)
+java -cp bin com.campus.lostandfound.app.CampusConsoleApp
+
+# Run the collection performance benchmark
 java -cp bin com.campus.lostandfound.benchmark.CollectionBenchmark
 ```
 

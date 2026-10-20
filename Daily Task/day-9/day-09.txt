@@ -26,12 +26,8 @@ SOURCE & DATA FILES IN THIS FOLDER:
 - users.csv               (Seed data for campus users)
 - README.md               (Full Markdown documentation report)
 - day-09.txt              (This text summary)
-- console_output.txt      (Execution log of menu options 1-6)
-- run.bat / run.ps1       (One-click execution launchers)
 
 HOW TO RUN:
-cmd> run.bat
-powershell> .\run.ps1
 javac -d bin CampusGenericsApp.java
 java -cp bin com.campus.lostandfound.CampusGenericsApp
 ================================================================================

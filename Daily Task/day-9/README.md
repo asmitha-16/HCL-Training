@@ -142,19 +142,8 @@ try (LockerAuditSession session1 = new LockerAuditSession("Session-1", "Locker-A
 
 ## 6. How to Run
 
-### Compile and Run Interactively
-```cmd
-run.bat
-```
-Or in PowerShell:
-```powershell
-.\run.ps1
-```
-
-Or directly with Java:
+Compile and run directly with Java:
 ```bash
 javac -d bin CampusGenericsApp.java
 java -cp bin com.campus.lostandfound.CampusGenericsApp
 ```
-
-> The captured live console execution log is saved in [`console_output.txt`](file:///C:/Users/ASMITHA/.gemini/antigravity/scratch/HCL%20Training/Daily%20Task/day-9/console_output.txt).

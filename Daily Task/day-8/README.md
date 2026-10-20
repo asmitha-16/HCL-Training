@@ -102,19 +102,8 @@ With `hashCode()` overridden, `key1` and `key2` produce identical hash codes, ro
 
 ## 6. How to Run
 
-### Compile and Run Interactively
-```cmd
-run.bat
-```
-Or in PowerShell:
-```powershell
-.\run.ps1
-```
-
-Or directly with Java:
+Compile and run directly with Java:
 ```bash
 javac -d bin CampusDirectory.java
 java -cp bin com.campus.lostandfound.CampusDirectory
 ```
-
-> The captured live console execution log is saved in [`console_output.txt`](file:///C:/Users/ASMITHA/.gemini/antigravity/scratch/HCL%20Training/Daily%20Task/day-8/console_output.txt).
