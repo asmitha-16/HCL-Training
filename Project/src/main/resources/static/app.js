@@ -46,6 +46,20 @@ function setupTabs() {
     });
   });
 
+  const selectTab = (tabId) => {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    if (btn) btn.click();
+    const dashboard = document.getElementById("dashboardSection");
+    if (dashboard) dashboard.scrollIntoView({ behavior: "smooth" });
+  };
+
+  document.getElementById("heroLostBtn")?.addEventListener("click", () => selectTab("reportLostTab"));
+  document.getElementById("heroFoundBtn")?.addEventListener("click", () => selectTab("logFoundTab"));
+  document.getElementById("heroDashboardBtn")?.addEventListener("click", () => selectTab("feedTab"));
+  document.getElementById("stepCard1")?.addEventListener("click", () => selectTab("reportLostTab"));
+  document.getElementById("stepCard2")?.addEventListener("click", () => selectTab("matchTab"));
+  document.getElementById("stepCard3")?.addEventListener("click", () => selectTab("claimsTab"));
+
   document.querySelectorAll(".seg-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".seg-btn").forEach(b => b.classList.remove("active"));

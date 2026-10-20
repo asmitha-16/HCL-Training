@@ -14,29 +14,20 @@
   <header class="app-header" role="banner">
     <div class="header-container">
       <div class="brand">
-        <div class="brand-logo" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <div class="brand-text">
-          <h1 class="brand-title">Campus Lost & Found</h1>
-          <span class="brand-sub">Smart Match & Verified Handover Engine</span>
-        </div>
+        <h1 class="brand-title">Lost &amp; Found</h1>
       </div>
 
-      <!-- Live Role Switcher -->
+      <!-- Header Controls: Dashboard Link, Persona Switcher, Notifications -->
       <div class="header-controls">
+        <button id="heroDashboardBtn" class="dashboard-pill-btn" aria-label="Go to Dashboard">Dashboard</button>
         <div class="role-selector-wrap" aria-label="Select User Persona">
-          <label for="roleSelector" class="role-label">Active Persona:</label>
+          <label for="roleSelector" class="role-label">Persona:</label>
           <select id="roleSelector" class="role-select" aria-label="Switch User Persona">
-            <option value="USR-STU-01" selected>👤 Student: Asmitha B. (Computer Science)</option>
-            <option value="USR-STU-02">👤 Student: Rahul Sharma (Electrical Eng)</option>
-            <option value="USR-STF-01">🎓 Faculty: Prof. Rajesh Kumar (Physics)</option>
-            <option value="USR-SEC-01">🛡️ Security Desk: Officer Dan (South Gate)</option>
-            <option value="USR-SEC-02">🛡️ Security Desk: Officer Sarah (Library)</option>
+            <option value="USR-STU-01" selected>👤 Student: Asmitha B.</option>
+            <option value="USR-STU-02">👤 Student: Rahul Sharma</option>
+            <option value="USR-STF-01">🎓 Faculty: Prof. Rajesh Kumar</option>
+            <option value="USR-SEC-01">🛡️ Security Desk: Officer Dan</option>
+            <option value="USR-SEC-02">🛡️ Security Desk: Officer Sarah</option>
             <option value="USR-ADM-01">⚡ Campus Admin: Dr. Eleanor Vance</option>
           </select>
         </div>
@@ -63,8 +54,40 @@
     </div>
   </aside>
 
+  <!-- Hero Section Matching Screenshot -->
+  <section class="hero-section" id="heroSection">
+    <div class="hero-container">
+      <div class="hero-left">
+        <div class="hero-badge">Campus noticeboard, but smarter</div>
+        <h1 class="hero-headline">Lost it on<br>campus? Let's<br>get it back.</h1>
+        <p class="hero-subtext">Report what you lost, log what you found. We match items by category, place and date, and the Security Desk verifies every handover.</p>
+        <div class="hero-actions">
+          <button id="heroLostBtn" class="btn-hero-primary">I lost something</button>
+          <button id="heroFoundBtn" class="btn-hero-secondary">I found something</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-step-card" id="stepCard1" tabindex="0" role="button" aria-label="Step 1: Report">
+          <span class="step-num">01</span>
+          <h3 class="step-title">Report</h3>
+          <p class="step-desc">Lost or found — title, category, place, date, photo.</p>
+        </div>
+        <div class="hero-step-card" id="stepCard2" tabindex="0" role="button" aria-label="Step 2: Match">
+          <span class="step-num">02</span>
+          <h3 class="step-title">Match</h3>
+          <p class="step-desc">Auto-suggested matches scored on category, location and date.</p>
+        </div>
+        <div class="hero-step-card" id="stepCard3" tabindex="0" role="button" aria-label="Step 3: Claim & hand over">
+          <span class="step-num">03</span>
+          <h3 class="step-title">Claim &amp; hand over</h3>
+          <p class="step-desc">Answer verification questions; Security checks ID.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Main Container -->
-  <main class="main-layout" role="main">
+  <main class="main-layout" id="dashboardSection" role="main">
     <!-- Tab Navigation -->
     <nav class="nav-tabs" role="tablist" aria-label="Application Views">
       <button class="tab-btn active" role="tab" aria-selected="true" data-tab="feedTab">
@@ -256,7 +279,7 @@
           <div class="privacy-tool-card">
             <div class="privacy-header">
               <div class="privacy-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 <span>NFR-P1 Photo Privacy Filter</span>
               </div>
               <label class="toggle-switch">
@@ -513,8 +536,8 @@
       </div>
       <form id="recordHandoverForm" class="modal-body">
         <div class="form-group" style="margin-bottom: 1.25rem;">
-          <label for="handoverClaimSelect" style="font-weight: 700; color: #38bdf8;">Select Verified Claim to Hand Over *</label>
-          <select id="handoverClaimSelect" required class="filter-select" style="width: 100%; background: #0f172a; font-size: 0.95rem; padding: 0.65rem;">
+          <label for="handoverClaimSelect" style="font-weight: 700;">Select Verified Claim to Hand Over *</label>
+          <select id="handoverClaimSelect" required class="filter-select" style="width: 100%; font-size: 0.95rem; padding: 0.65rem;">
             <option value="">Select an Approved Claim...</option>
           </select>
           <input type="hidden" id="handoverClaimId">
