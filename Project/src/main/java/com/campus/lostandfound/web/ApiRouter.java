@@ -63,9 +63,21 @@ public class ApiRouter {
 
     public HttpResponse route(String method, String path, String query, String body, String clientIp, String authHeader) {
         try {
-            // Check health
-            if ("GET".equalsIgnoreCase(method) && "/api/health".equals(path)) {
+            // Check health (NFR-11)
+            if ("GET".equalsIgnoreCase(method) && ("/api/health".equals(path) || "/actuator/health".equals(path))) {
                 return jsonResponse(200, "{\"status\":\"UP\",\"platform\":\"Campus Lost and Found\",\"services\":[\"auth-service\",\"item-service\",\"claim-service\",\"matching-engine\"]}");
+            }
+
+            // OpenAPI Documentation (NFR-14)
+            if ("GET".equalsIgnoreCase(method) && ("/api-docs".equals(path) || "/openapi.json".equals(path))) {
+                try {
+                    java.nio.file.Path p = java.nio.file.Paths.get("openapi.json");
+                    if (!java.nio.file.Files.exists(p)) p = java.nio.file.Paths.get("Project/openapi.json");
+                    if (java.nio.file.Files.exists(p)) {
+                        return jsonResponse(200, java.nio.file.Files.readString(p));
+                    }
+                } catch (Exception ignored) {}
+                return jsonResponse(200, "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Campus Lost & Found Platform API\"}}");
             }
 
             // M1: Auth
@@ -77,7 +89,7 @@ public class ApiRouter {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
                 String username = data.get("username");
                 if (username == null || username.isBlank()) {
-                    return jsonResponse(400, "{\"error\":\"Username required\"}");
+                    return problemResponse(400, "Bad Request", "Username required");
                 }
                 String token = authService.login(username);
                 AppUser user = authService.getUserByUsername(username).orElseThrow();
@@ -93,12 +105,12 @@ public class ApiRouter {
                 return jsonResponse(200, serializeLocations(itemService.getAllLocations()));
             }
 
-            // M2: Lost Reports (FR1)
-            if ("GET".equalsIgnoreCase(method) && "/api/items/lost".equals(path)) {
+            // M2: Lost Reports (FR1 & Catalog POST/GET /api/v1/lost)
+            if ("GET".equalsIgnoreCase(method) && ("/api/items/lost".equals(path) || "/api/v1/lost".equals(path))) {
                 return jsonResponse(200, serializeLostReports(itemService.getAllLostReports()));
             }
 
-            if ("POST".equalsIgnoreCase(method) && "/api/items/lost".equals(path)) {
+            if ("POST".equalsIgnoreCase(method) && ("/api/items/lost".equals(path) || "/api/v1/lost".equals(path))) {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
                 LocalDate lostDate = data.containsKey("lostDate") && !data.get("lostDate").isBlank()
                         ? LocalDate.parse(data.get("lostDate"))
@@ -127,14 +139,14 @@ public class ApiRouter {
                 return jsonResponse(201, serializeLostReport(report));
             }
 
-            // M2: Found Items (FR2 & NFR-P1)
-            if ("GET".equalsIgnoreCase(method) && "/api/items/found".equals(path)) {
+            // M2: Found Items (FR2 & Catalog POST/GET /api/v1/found & NFR-P1)
+            if ("GET".equalsIgnoreCase(method) && ("/api/items/found".equals(path) || "/api/v1/found".equals(path))) {
                 // If security desk, allow viewing original photo, else masked photo
                 boolean isSecurity = authHeader != null && (authHeader.contains("SECURITY") || authHeader.contains("ADMIN"));
                 return jsonResponse(200, serializeFoundItems(itemService.getAllFoundItems(), isSecurity));
             }
 
-            if ("POST".equalsIgnoreCase(method) && "/api/items/found".equals(path)) {
+            if ("POST".equalsIgnoreCase(method) && ("/api/items/found".equals(path) || "/api/v1/found".equals(path))) {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
                 LocalDate foundDate = data.containsKey("foundDate") && !data.get("foundDate").isBlank()
                         ? LocalDate.parse(data.get("foundDate"))
@@ -168,9 +180,13 @@ public class ApiRouter {
                 return jsonResponse(201, serializeFoundItem(item, true));
             }
 
-            // M3: Matching Engine (FR3 / NFR-P2)
-            if ("GET".equalsIgnoreCase(method) && "/api/items/matches".equals(path)) {
+            // M3: Matching Engine (FR3 / NFR-P2 & Catalog GET /api/v1/lost/{id}/matches)
+            if ("GET".equalsIgnoreCase(method) && ("/api/items/matches".equals(path) || (path.startsWith("/api/v1/lost/") && path.endsWith("/matches")))) {
                 String reportId = extractQueryParam(query, "reportId");
+                if (path.startsWith("/api/v1/lost/") && path.endsWith("/matches")) {
+                    reportId = path.substring("/api/v1/lost/".length(), path.length() - "/matches".length());
+                }
+
                 if (reportId == null || reportId.isBlank()) {
                     // Return all suggestions
                     return jsonResponse(200, serializeSuggestions(itemService.getMatchingEngine().getAllSuggestions()));
@@ -178,7 +194,7 @@ public class ApiRouter {
 
                 Optional<LostReport> repOpt = itemService.getLostReport(reportId);
                 if (repOpt.isEmpty()) {
-                    return jsonResponse(404, "{\"error\":\"Report not found: " + reportId + "\"}");
+                    return problemResponse(404, "Not Found", "Report not found: " + reportId);
                 }
 
                 // Asynchronous execution via CompletableFuture
@@ -191,7 +207,7 @@ public class ApiRouter {
                 return jsonResponse(200, serializeMatchResults(matches, durationMs));
             }
 
-            // M4: Claims (FR4 & FR6)
+            // M4: Claims (FR4 & FR6 & Catalog POST /api/v1/found/{id}/claims)
             if ("GET".equalsIgnoreCase(method) && "/api/claims".equals(path)) {
                 String userId = extractQueryParam(query, "userId");
                 List<Claim> list = (userId != null && !userId.isBlank())
@@ -200,14 +216,19 @@ public class ApiRouter {
                 return jsonResponse(200, serializeClaims(list));
             }
 
-            if ("POST".equalsIgnoreCase(method) && "/api/claims".equals(path)) {
+            if ("POST".equalsIgnoreCase(method) && ("/api/claims".equals(path) || (path.startsWith("/api/v1/found/") && path.endsWith("/claims")))) {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
+
+                String foundId = data.get("foundItemId");
+                if (path.startsWith("/api/v1/found/") && path.endsWith("/claims")) {
+                    foundId = path.substring("/api/v1/found/".length(), path.length() - "/claims".length());
+                }
 
                 // Parse questions / answers
                 List<VerificationAnswer> answers = parseAnswers(data);
 
                 ClaimService.SubmitClaimRequest req = new ClaimService.SubmitClaimRequest(
-                        data.get("foundItemId"),
+                        foundId,
                         data.get("lostReportId"),
                         data.getOrDefault("claimantUserId", "USR-STU-01"),
                         data.getOrDefault("claimantName", "Student Claimant"),
@@ -301,17 +322,27 @@ public class ApiRouter {
                 return jsonResponse(200, serializeNotifications(list));
             }
 
-            return jsonResponse(404, "{\"error\":\"Endpoint not found: " + path + "\"}");
+            return problemResponse(404, "Not Found", "Endpoint not found: " + path);
 
         } catch (IllegalArgumentException e) {
-            return jsonResponse(400, "{\"error\":\"" + JsonUtil.escape(e.getMessage()) + "\"}");
+            return problemResponse(400, "Bad Request", e.getMessage());
         } catch (IllegalStateException e) {
-            return jsonResponse(409, "{\"error\":\"" + JsonUtil.escape(e.getMessage()) + "\"}");
+            return problemResponse(409, "Conflict / Business Rule Violation", e.getMessage());
         } catch (NoSuchElementException e) {
-            return jsonResponse(404, "{\"error\":\"" + JsonUtil.escape(e.getMessage()) + "\"}");
+            return problemResponse(404, "Not Found", e.getMessage());
         } catch (Exception e) {
-            return jsonResponse(500, "{\"error\":\"Server error: " + JsonUtil.escape(e.getMessage()) + "\"}");
+            return problemResponse(500, "Internal Server Error", "An error occurred: " + e.getMessage());
         }
+    }
+
+    private HttpResponse problemResponse(int status, String title, String detail) {
+        String safeTitle = JsonUtil.escape(title != null ? title : "Error");
+        String safeDetail = JsonUtil.escape(detail != null ? detail : "No detail provided");
+        String body = String.format(
+                "{\"type\":\"about:blank\",\"title\":\"%s\",\"status\":%d,\"detail\":\"%s\",\"errors\":[\"%s\"],\"error\":\"%s\"}",
+                safeTitle, status, safeDetail, safeDetail, safeDetail
+        );
+        return new HttpResponse(status, "application/problem+json; charset=utf-8", body);
     }
 
     private HttpResponse jsonResponse(int code, String body) {

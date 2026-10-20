@@ -197,4 +197,21 @@ public class ItemReportService implements ItemServiceClient {
         String code = item.status().code();
         return !"CLAIM_APPROVED".equals(code) && !"HANDED_OVER".equals(code) && !"EXPIRED_FOR_DONATION".equals(code);
     }
+
+    @Override
+    public Optional<ItemSummary> findItemByLockerOrReference(String reference) {
+        if (reference == null || reference.isBlank()) return Optional.empty();
+        for (FoundItem f : foundItems.values()) {
+            if (f.id().equalsIgnoreCase(reference) || 
+               (f.custodyLockerId() != null && f.custodyLockerId().equalsIgnoreCase(reference))) {
+                return Optional.of(new ItemSummary(f.id(), f.title(), f.categoryCode(), f.locationId(), f.status().code(), f.custodyLockerId(), f.loggedByUserId()));
+            }
+        }
+        for (LostReport l : lostReports.values()) {
+            if (l.id().equalsIgnoreCase(reference)) {
+                return Optional.of(new ItemSummary(l.id(), l.title(), l.categoryCode(), l.locationId(), l.status().code(), "N/A", l.reporterUserId()));
+            }
+        }
+        return Optional.empty();
+    }
 }

@@ -58,7 +58,7 @@ public class EmbeddedWebServer {
             String query = exchange.getRequestURI().getRawQuery();
             String method = exchange.getRequestMethod();
 
-            if (path.startsWith("/api/")) {
+            if (path.startsWith("/api/") || path.startsWith("/actuator/") || path.equals("/api-docs") || path.equals("/openapi.json")) {
                 // Read request body
                 String body = "";
                 try (InputStream is = exchange.getRequestBody()) {

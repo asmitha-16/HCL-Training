@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Campus Lost & Found Platform API (JFS-40)",
+    "description": "Enterprise API for reporting lost/found property, auto-matching, verified claims, security desk handover, and KPI analytics.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Localhost Development Server"
+    }
+  ],
+  "paths": {
+    "/api/v1/lost": {
+      "get": {
+        "summary": "List all lost item reports (FR1)",
+        "responses": {
+          "200": { "description": "Array of lost reports" }
+        }
+      },
+      "post": {
+        "summary": "Report a lost item (FR1)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "categoryCode": { "type": "string" },
+                  "locationId": { "type": "string" },
+                  "lostDate": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Lost report created" }
+        }
+      }
+    },
+    "/api/v1/found": {
+      "get": {
+        "summary": "List all found items (FR2 & NFR-P1 masked photo)",
+        "responses": {
+          "200": { "description": "Array of found items" }
+        }
+      },
+      "post": {
+        "summary": "Log a found item with custody locker (FR2)",
+        "responses": {
+          "201": { "description": "Found item logged" }
+        }
+      }
+    },
+    "/api/v1/lost/{id}/matches": {
+      "get": {
+        "summary": "Retrieve automatic match suggestions for a lost report (FR3 & NFR-P2)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Array of scored matches" }
+        }
+      }
+    },
+    "/api/v1/found/{id}/claims": {
+      "post": {
+        "summary": "Submit ownership claim answering challenge questions (FR4)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "201": { "description": "Claim registered" }
+        }
+      }
+    },
+    "/api/claims/approve": {
+      "post": {
+        "summary": "Approve verified claim with anti-duplicate guard (FR6)",
+        "responses": {
+          "200": { "description": "Claim approved" }
+        }
+      }
+    },
+    "/api/handover": {
+      "post": {
+        "summary": "Record physical item release at security desk (FR5)",
+        "responses": {
+          "201": { "description": "Handover completed" }
+        }
+      }
+    },
+    "/api/expiry/scan": {
+      "post": {
+        "summary": "Trigger 60-day unclaimed item donation scan (FR7)",
+        "responses": {
+          "200": { "description": "Donation batch manifest generated" }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "summary": "Admin recovery rate & KPI metrics (FR8)",
+        "responses": {
+          "200": { "description": "Recovery statistics object" }
+        }
+      }
+    },
+    "/actuator/health": {
+      "get": {
+        "summary": "System Health & Observability Endpoint (NFR-11)",
+        "responses": {
+          "200": { "description": "Status UP" }
+        }
+      }
+    }
+  }
+}
