@@ -1,3 +1,11 @@
+
+function formatDaysAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
+  if (isNaN(diff)) return '';
+  if (diff <= 0) return 'today';
+  return `${diff}d ago`;
+}
 const STATE = {
   activeUserId: "USR-STU-01",
   activeRole: "STUDENT_STAFF",
@@ -201,27 +209,32 @@ function renderFeed() {
   grid.innerHTML = filtered.map(item => {
     const isLost = item.type === "lost";
     const statusBadgeClass = getBadgeClass(item.status);
+    const days = formatDaysAgo(item.date);
+    const dateText = item.date ? `${item.date} (${days})` : '';
+    const isExpired = item.status === 'EXPIRED_FOR_DONATION';
 
     return `
-      <article class="item-card" aria-label="${item.title}">
-        <div class="item-card-photo">
-          <span class="item-type-badge ${item.type}">${item.type.toUpperCase()}</span>
-          ${item.hasMasking ? '<span class="photo-privacy-badge">?? NFR-P1 Masked</span>' : ''}
-          ${item.photo ? `<img src="${item.photo}" alt="${item.title}">` : '<div style="color: #64748b; font-size: 2.5rem;">??</div>'}
+      <article class="item-card" aria-label="${escapeHtml(item.title)}">
+        <div class="item-card-media">
+          ${item.photo ? `<img src="${item.photo}" alt="${escapeHtml(item.title)}" class="item-card-img">` : '<div class="no-photo-badge">No photo</div>'}
+          <span class="item-type-badge ${item.type}">${isLost ? 'Lost' : 'Found'}</span>
+          ${item.hasMasking ? '<span class="privacy-shield-tag">🛡️ Shielded</span>' : ''}
         </div>
         <div class="item-card-body">
-          <div class="item-card-meta">
-            <span>?? ${item.date}</span>
-            <span>?? ${item.location}</span>
+          <div class="item-card-header-row">
+            <h3 class="item-title">${escapeHtml(item.title)}</h3>
           </div>
-          <h3 class="item-card-title">${escapeHtml(item.title)}</h3>
+          <p class="item-card-sub">${escapeHtml(item.category || '')} · ${escapeHtml(item.location || '')} · ${escapeHtml(dateText)}</p>
           <p class="item-desc">${escapeHtml(item.desc || 'No additional description provided.')}</p>
-          <div class="item-card-footer">
+          <div class="item-card-badges">
             <span class="badge ${statusBadgeClass}">${item.statusName || item.status}</span>
+            ${isExpired ? '<span class="badge badge-expired">Expired · flag for donation</span>' : ''}
+          </div>
+          <div class="item-card-footer">
             ${!isLost && (item.status === 'IN_CUSTODY' || item.status === 'MATCHED') ?
-              `<button class="btn btn-secondary btn-sm" onclick="openClaimModal('${item.id}', '${escapeHtml(item.title)}', '${item.category}')">Raise Claim (FR4)</button>`
+              `<button class="btn-card-claim" onclick="openClaimModal('${item.id}', '${escapeHtml(item.title)}', '${item.category}')">This is mine — claim it</button>`
               : ''}
-            ${isLost ? `<button class="btn btn-secondary btn-sm" onclick="evaluateReportMatches('${item.id}')">Scan Matches ?</button>` : ''}
+            ${isLost ? `<button class="btn-card-claim" onclick="evaluateReportMatches('${item.id}')">View suggested matches →</button>` : ''}
           </div>
         </div>
       </article>
@@ -276,7 +289,7 @@ function setupPhotoCanvas() {
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 13px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText("?? SENSITIVE DETAILS OBSCURED", 200, 110);
+      ctx.fillText("🛡️ SENSITIVE DETAILS OBSCURED", 200, 110);
       ctx.font = "11px system-ui";
       ctx.fillText("NFR-P1 Privacy Shield � Verify at Desk", 200, 126);
     } else {
@@ -365,7 +378,7 @@ function setupForms() {
         body: JSON.stringify(payload)
       });
       const data = await resp.json();
-      alert(`? Found Item Secured! (ID: ${data.id}, Custody Locker: ${data.custodyLockerId})\n60-day expiry rule active.`);
+      alert(`✓ Found Item Secured! (ID: ${data.id}, Custody Locker: ${data.custodyLockerId})\n60-day expiry rule active.`);
       document.getElementById("foundItemForm").reset();
       await refreshAllData();
       document.querySelector('[data-tab="feedTab"]')?.click();
@@ -383,7 +396,7 @@ function setupForms() {
         body: JSON.stringify({ date: new Date().toISOString().split("T")[0] })
       });
       const res = await resp.json();
-      alert(`?? 60-Day Expiry Scan Completed (FR7):\n� Total Evaluated: ${res.totalEvaluated}\n� Newly Flagged for Donation: ${res.newlyFlaggedForDonation}\n� Donation Manifest Batch: ${res.batchId}`);
+      alert(`?? 60-Day Expiry Scan Completed (FR7):\n� Total Evaluated: ${res.totalEvaluated}\n�• Newly Flagged for Donation: ${res.newlyFlaggedForDonation}\n�• Donation Manifest Batch: ${res.batchId}`);
       await refreshAllData();
       loadAdminAnalytics();
     } catch (err) {
@@ -419,7 +432,7 @@ async function executeMatchScan() {
 
   const container = document.getElementById("matchesContainer");
   const telemetry = document.getElementById("matchTelemetry");
-  container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">? Executing parallel multi-factor matching via CompletableFuture...</div>';
+  container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem;">⚡ Executing parallel multi-factor matching via CompletableFuture...</div>';
   telemetry.hidden = false;
 
   try {
@@ -448,7 +461,7 @@ async function executeMatchScan() {
             <div style="font-size: 0.72rem; font-weight: 700; color: ${confColor}; text-transform: uppercase;">${m.confidenceLevel} CONFIDENCE</div>
           </div>
 
-          <h3 style="font-size: 1.1rem; font-weight: 700; color: #fff; max-width: 70%;">${escapeHtml(item?.title || m.foundItemId)}</h3>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); max-width: 70%;">${escapeHtml(item?.title || m.foundItemId)}</h3>
           <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.2rem;">Location: ${formatLocation(item?.locationId)} � Found: ${item?.foundDate}</p>
 
           <div class="score-bars">
@@ -557,7 +570,7 @@ function setupModals() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Submission failed");
 
-      alert(`? Ownership Claim Raised! (ID: ${data.id})\nAwaiting Security Desk verification.`);
+      alert(`✓ Ownership Claim Raised! (ID: ${data.id})\nAwaiting Security Desk verification.`);
       document.getElementById("claimModal").hidden = true;
       document.getElementById("raiseClaimForm").reset();
       await refreshAllData();
@@ -615,7 +628,7 @@ function setupModals() {
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Handover failed");
 
-      alert(`?? Handover Completed & Verified! (ID: ${data.id})\nItem released to ${data.recipientName}. Status updated to HANDED_OVER via Feign.`);
+      alert(`✓ Handover Completed & Verified! (ID: ${data.id})\nItem released to ${data.recipientName}. Status updated to HANDED_OVER via Feign.`);
       document.getElementById("handoverModal").hidden = true;
       document.getElementById("recordHandoverForm").reset();
       await refreshAllData();
@@ -665,7 +678,7 @@ function renderClaimsList() {
       <div class="claim-item-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
           <div>
-            <h4 style="color: #fff; font-size: 1rem;">Claim #${c.id}</h4>
+            <h4 style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">Claim #${c.id}</h4>
             <span style="font-size: 0.75rem; color: #94a3b8;">Item #${c.foundItemId} � Claimant: <strong>${escapeHtml(c.claimantName)}</strong> (${c.claimantUserId})</span>
           </div>
           <span class="badge ${getBadgeClass(c.status)}">${c.status}</span>
@@ -715,7 +728,7 @@ function renderHandoversList() {
         <h4 style="color: #38bdf8; font-size: 0.95rem;">${h.id} � Handed Over</h4>
         <span style="font-size: 0.72rem; color: #94a3b8;">${new Date(h.timestamp).toLocaleString()}</span>
       </div>
-      <p style="font-size: 0.82rem; color: #f8fafc; margin-bottom: 0.25rem;">
+      <p style="font-size: 0.82rem; color: var(--text-main); margin-bottom: 0.25rem;">
         Recipient: <strong>${escapeHtml(h.recipientName)}</strong> (ID: <code>${escapeHtml(h.recipientIdNumber)}</code>)
       </p>
       <p style="font-size: 0.8rem; color: #94a3b8;">
@@ -742,7 +755,7 @@ window.approveClaim = async function(claimId) {
 
     if (!resp.ok) throw new Error(data.error || "Approval rejected");
 
-    alert(`? Claim Approved! (FR6 Anti-Duplicate Claim guard verified)\nItem status set to CLAIM_APPROVED via Feign. Ready for handover.`);
+    alert(`✓ Claim Approved! (FR6 Anti-Duplicate Claim guard verified)\nItem status set to CLAIM_APPROVED via Feign. Ready for handover.`);
     await refreshAllData();
     loadClaimsAndHandovers();
   } catch (err) {
