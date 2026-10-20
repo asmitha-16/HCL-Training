@@ -1,0 +1,48 @@
+================================================================================
+DAY 1: JAVA PLATFORM BASICS + AGILE / SCRUM BASICS
+CAMPUS LOST AND FOUND PORTAL (JFS-40)
+================================================================================
+
+TOPIC:
+Java Platform Basics: JVM, JRE, JDK; JVM architecture; compilation & execution flow.
+Agile / Scrum Basics: Sprints, standups, retrospectives; user stories; estimation; Definition of Done.
+
+CONCEPTS IMPLEMENTED:
+1. Java Runtime Environment Inspection (JDK vs JRE vs JVM).
+2. JVM Runtime Data Areas (Heap, Stack, Method Area) & Class Loading Flow.
+3. Compilation & Disassembly via terminal: javac, java, and javap -c.
+4. JFS-40 Project Requirements Breakdown:
+   - FR1: Lost Item Reporting with details
+   - FR2: Found Item Logging with photo & custody locker assignment
+   - FR3: Automated Match Suggestions by category, location, and date
+   - FR4: Ownership Claim Verification Challenge Quiz
+   - FR5: Security Desk Handover with Photo ID verification & digital signature
+   - FR6: Atomic Concurrency Lock preventing duplicate approved claims
+   - FR7: 60-Day Item Expiry Lifecycle & Charitable Donation batching
+   - FR8: Admin Recovery Rate Analytics & Operational KPIs
+5. All 8 FRs converted to User Stories with Fibonacci Story Point estimates.
+6. Acceptance Criteria (Given/When/Then) for all 8 User Stories.
+7. Verification & Compliance against NFRs:
+   - NFR-P1 (Photo privacy masking), NFR-P2 (Matching < 1 s),
+   - NFR-P3 (Claim fraud audit trail), NFR-P4 (Accessibility & Responsiveness),
+   - Standard NFRs: NFR-01 through NFR-14.
+8. Comprehensive 12-point Definition of Done (DoD).
+9. Agile Sprint Cadence & GitHub Projects Backlog Board Mapping.
+
+SOURCE FILES IN THIS FOLDER:
+- PlatformInfo.java       (Terminal-executable Java environment and capacity checker)
+- README.md               (Comprehensive technical report, user stories, DoD, and NFR matrix)
+- day-01.txt              (This summary file)
+- terminal_output.txt     (Live console execution log of PlatformInfo)
+- javap_output.txt        (Full disassembled bytecode via javap -c -p)
+- classloading_trace.txt  (JVM classloading verification via -verbose:class)
+- run.bat / run.ps1       (One-click execution launchers)
+- bin/PlatformInfo.class  (Compiled bytecode file)
+
+HOW TO RUN:
+cmd> run.bat
+powershell> .\run.ps1
+javac -d bin PlatformInfo.java
+java -cp bin PlatformInfo
+& "C:\Program Files\Java\jdk-25\bin\javap.exe" -c -p -cp bin PlatformInfo
+================================================================================
