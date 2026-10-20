@@ -145,7 +145,7 @@ public class LostAndFoundApplication {
                 "LOCKER-E10",
                 "USR-SEC-02",
                 "SECURITY_DESK",
-                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23334155'/><text x='200' y='150' fill='white' font-size='16' text-anchor='middle'>Apple Laptop Photo</text></svg>",
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23e8f4ee'/><rect x='100' y='70' width='200' height='130' rx='8' fill='%2318533d'/><polygon points='70,200 330,200 310,225 90,225' fill='%2394a3b8'/><rect x='130' y='110' width='140' height='50' rx='6' fill='%23dc2626' opacity='0.9'/><text x='200' y='140' fill='white' font-family='sans-serif' font-size='12' font-weight='bold' text-anchor='middle'>SHIELDED · SENSITIVE</text></svg>",
                 null,
                 true,
                 "Has GitHub sticker and minor scratch on right port"
@@ -162,7 +162,7 @@ public class LostAndFoundApplication {
                 "LOCKER-W04",
                 "USR-SEC-01",
                 "SECURITY_DESK",
-                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23475569'/><text x='200' y='150' fill='white' font-size='16' text-anchor='middle'>Wallet Photo</text></svg>",
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23fef3c7'/><rect x='110' y='60' width='180' height='150' rx='10' fill='%2378350f'/><rect x='130' y='90' width='140' height='90' rx='6' fill='%23fef08a'/><rect x='140' y='110' width='120' height='50' rx='4' fill='%23dc2626' opacity='0.9'/><text x='200' y='140' fill='white' font-family='sans-serif' font-size='11' font-weight='bold' text-anchor='middle'>ID MASKED (NFR-P1)</text></svg>",
                 null,
                 true,
                 "Contains student ID card and bus card"
@@ -180,7 +180,7 @@ public class LostAndFoundApplication {
                 "BIN-302",
                 "USR-SEC-01",
                 "SECURITY_DESK",
-                null,
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23e0f2fe'/><rect x='160' y='70' width='80' height='170' rx='20' fill='%230284c7'/><rect x='180' y='45' width='40' height='25' rx='6' fill='%230369a1'/><text x='200' y='160' fill='white' font-family='sans-serif' font-size='12' font-weight='bold' text-anchor='middle'>HYDRO FLASK</text></svg>",
                 null,
                 false,
                 "Dent on bottom base"
@@ -224,7 +224,7 @@ public class LostAndFoundApplication {
                 "DONATION-BOX-1",
                 "USR-SEC-01",
                 "SECURITY_DESK",
-                null,
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23f1f5f9'/><path d='M130,80 L200,110 L270,80 L300,135 L260,150 L260,230 L140,230 L140,150 L100,135 Z' fill='%231e293b'/><text x='200' y='180' fill='white' font-family='sans-serif' font-size='12' font-weight='bold' text-anchor='middle'>UMBRO JACKET (L)</text></svg>",
                 null,
                 false,
                 "No identifying nametag"

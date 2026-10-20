@@ -1,4 +1,22 @@
 
+function getCategoryPlaceholderSvg(categoryCode) {
+  const stroke = '#18533d';
+  let icon = '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>';
+  if (categoryCode === 'BAGS') {
+    icon = '<path d="M6 20h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/><path d="M9 6V4a3 3 0 0 1 6 0v2"/>';
+  } else if (categoryCode === 'ID_CARDS') {
+    icon = '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><line x1="15" y1="8" x2="17" y2="8"/><line x1="15" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/>';
+  } else if (categoryCode === 'KEYS') {
+    icon = '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m21 3-9.5 9.5"/><path d="m15.5 7.5 3 3"/><path d="M14 9l2 2"/>';
+  } else if (categoryCode === 'WEARABLES') {
+    icon = '<path d="M12 2v4"/><path d="M12 18v4"/><rect x="4" y="6" width="16" height="12" rx="4"/>';
+  } else if (categoryCode === 'BOOKS_STATIONERY') {
+    icon = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>';
+  }
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="card-placeholder-icon">${icon}</svg>`;
+}
+
+
 function formatDaysAgo(dateStr) {
   if (!dateStr) return '';
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60 * 24));
@@ -212,20 +230,25 @@ function renderFeed() {
     const days = formatDaysAgo(item.date);
     const dateText = item.date ? `${item.date} (${days})` : '';
     const isExpired = item.status === 'EXPIRED_FOR_DONATION';
+    const hasPhoto = item.photo && item.photo.trim().length > 5 && item.photo !== 'null' && item.photo !== 'undefined';
+
+    const photoHtml = hasPhoto
+      ? `<img src="${item.photo}" alt="${escapeHtml(item.title)}" class="item-card-img">`
+      : `<div class="card-placeholder-box">${getCategoryPlaceholderSvg(item.category)}<span class="placeholder-caption">${isLost ? 'Lost Item Report' : 'No photo uploaded'}</span></div>`;
 
     return `
       <article class="item-card" aria-label="${escapeHtml(item.title)}">
         <div class="item-card-media">
-          ${item.photo ? `<img src="${item.photo}" alt="${escapeHtml(item.title)}" class="item-card-img">` : '<div class="no-photo-badge">No photo</div>'}
+          ${photoHtml}
           <span class="item-type-badge ${item.type}">${isLost ? 'Lost' : 'Found'}</span>
-          ${item.hasMasking ? '<span class="privacy-shield-tag">🛡️ Shielded</span>' : ''}
+          ${item.hasMasking ? '<span class="privacy-shield-tag">🛡️ Privacy Shield (NFR-P1)</span>' : ''}
         </div>
         <div class="item-card-body">
           <div class="item-card-header-row">
             <h3 class="item-title">${escapeHtml(item.title)}</h3>
           </div>
           <p class="item-card-sub">${escapeHtml(item.category || '')} · ${escapeHtml(item.location || '')} · ${escapeHtml(dateText)}</p>
-          <p class="item-desc">${escapeHtml(item.desc || 'No additional description provided.')}</p>
+          <p class="item-desc">${escapeHtml(item.desc || 'No description provided.')}</p>
           <div class="item-card-badges">
             <span class="badge ${statusBadgeClass}">${item.statusName || item.status}</span>
             ${isExpired ? '<span class="badge badge-expired">Expired · flag for donation</span>' : ''}
@@ -291,7 +314,7 @@ function setupPhotoCanvas() {
       ctx.textAlign = "center";
       ctx.fillText("🛡️ SENSITIVE DETAILS OBSCURED", 200, 110);
       ctx.font = "11px system-ui";
-      ctx.fillText("NFR-P1 Privacy Shield � Verify at Desk", 200, 126);
+      ctx.fillText("NFR-P1 Privacy Shield · Verify at Desk", 200, 126);
     } else {
       ctx.fillStyle = "#38bdf8";
       ctx.font = "13px monospace";
@@ -396,7 +419,7 @@ function setupForms() {
         body: JSON.stringify({ date: new Date().toISOString().split("T")[0] })
       });
       const res = await resp.json();
-      alert(`?? 60-Day Expiry Scan Completed (FR7):\n� Total Evaluated: ${res.totalEvaluated}\n�• Newly Flagged for Donation: ${res.newlyFlaggedForDonation}\n�• Donation Manifest Batch: ${res.batchId}`);
+      alert(`✓ 60-Day Expiry Scan Completed (FR7):\n· Total Evaluated: ${res.totalEvaluated}\n·• Newly Flagged for Donation: ${res.newlyFlaggedForDonation}\n·• Donation Manifest Batch: ${res.batchId}`);
       await refreshAllData();
       loadAdminAnalytics();
     } catch (err) {
@@ -462,7 +485,7 @@ async function executeMatchScan() {
           </div>
 
           <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); max-width: 70%;">${escapeHtml(item?.title || m.foundItemId)}</h3>
-          <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.2rem;">Location: ${formatLocation(item?.locationId)} � Found: ${item?.foundDate}</p>
+          <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.2rem;">Location: ${formatLocation(item?.locationId)} · Found: ${item?.foundDate}</p>
 
           <div class="score-bars">
             <div class="score-bar-row">
@@ -510,7 +533,7 @@ window.openClaimModal = function(foundItemId, title, categoryCode, lostReportId 
   document.getElementById("claimFoundItemId").value = foundItemId;
   document.getElementById("claimLostReportId").value = lostReportId;
   document.getElementById("claimItemTitle").textContent = title || "Item #" + foundItemId;
-  document.getElementById("claimItemDetails").textContent = `Category: ${categoryCode} � Found Item ID: ${foundItemId}`;
+  document.getElementById("claimItemDetails").textContent = `Category: ${categoryCode} · Found Item ID: ${foundItemId}`;
 
   const catObj = STATE.categories.find(c => c.code === categoryCode) || STATE.categories[0];
   const questions = catObj ? catObj.questions : [
@@ -679,7 +702,7 @@ function renderClaimsList() {
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
           <div>
             <h4 style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">Claim #${c.id}</h4>
-            <span style="font-size: 0.75rem; color: #94a3b8;">Item #${c.foundItemId} � Claimant: <strong>${escapeHtml(c.claimantName)}</strong> (${c.claimantUserId})</span>
+            <span style="font-size: 0.75rem; color: #94a3b8;">Item #${c.foundItemId} · Claimant: <strong>${escapeHtml(c.claimantName)}</strong> (${c.claimantUserId})</span>
           </div>
           <span class="badge ${getBadgeClass(c.status)}">${c.status}</span>
         </div>
@@ -725,14 +748,14 @@ function renderHandoversList() {
   container.innerHTML = STATE.handovers.map(h => `
     <div class="handover-item-card">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-        <h4 style="color: #38bdf8; font-size: 0.95rem;">${h.id} � Handed Over</h4>
+        <h4 style="color: #38bdf8; font-size: 0.95rem;">${h.id} · Handed Over</h4>
         <span style="font-size: 0.72rem; color: #94a3b8;">${new Date(h.timestamp).toLocaleString()}</span>
       </div>
       <p style="font-size: 0.82rem; color: var(--text-main); margin-bottom: 0.25rem;">
         Recipient: <strong>${escapeHtml(h.recipientName)}</strong> (ID: <code>${escapeHtml(h.recipientIdNumber)}</code>)
       </p>
       <p style="font-size: 0.8rem; color: #94a3b8;">
-        Item: <strong>#${h.foundItemId}</strong> � Officer: <strong>${escapeHtml(h.officerName)}</strong> � Locker: <code>${h.lockerIdReleased}</code>
+        Item: <strong>#${h.foundItemId}</strong> · Officer: <strong>${escapeHtml(h.officerName)}</strong> · Locker: <code>${h.lockerIdReleased}</code>
       </p>
       <p style="font-size: 0.78rem; color: #cbd5e1; margin-top: 0.35rem; font-style: italic;">
         "${escapeHtml(h.notes)}"

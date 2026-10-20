@@ -106,6 +106,9 @@ public class EmbeddedWebServer {
             byte[] fileBytes = Files.readAllBytes(filePath);
 
             exchange.getResponseHeaders().set("Content-Type", contentType);
+            exchange.getResponseHeaders().set("Cache-Control", "no-cache, no-store, must-revalidate");
+            exchange.getResponseHeaders().set("Pragma", "no-cache");
+            exchange.getResponseHeaders().set("Expires", "0");
             exchange.sendResponseHeaders(200, fileBytes.length);
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(fileBytes);
