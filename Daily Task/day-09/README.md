@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal
 **Module:** Generics basics; Bounded Types; Wildcards (PECS); try-with-resources; AutoCloseable  
 **Deliverables:** GenericToolkit + CrudRepository + CSV Loader + AutoCloseable Demo + Text Report  
-**Location:** `Daily Task/day-9/`
+**Location:** `Daily Task/day-09/`
 
 ---
 

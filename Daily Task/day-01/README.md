@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal (JFS-40)
 **Curriculum Modules:** Module 1 (Core Java Fundamentals) & Module 22 (Agile & Project Readiness)  
 **Deliverables:** `PlatformInfo.java`, Terminal Execution Log, `javap` Disassembled Bytecode, Classloading Trace, JFS-40 User Story Backlog (FR1–FR8), Definition of Done (DoD), and NFR Verification Matrix  
-**Location:** `Daily Task/day-1/`
+**Location:** `Daily Task/day-01/`
 
 ---
 

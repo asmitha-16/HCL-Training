@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal
 **Module:** Collections Framework — Part 2 (Maps, Comparable & Comparator, HashMap vs. TreeMap, equals/hashCode Contract, FR4–FR6)  
 **Deliverables:** CampusDirectory code + Text Report + Missing-hashCode Bug Demo + Sorted TreeMap Reports  
-**Location:** `Daily Task/day-8/`
+**Location:** `Daily Task/day-08/`
 
 ---
 

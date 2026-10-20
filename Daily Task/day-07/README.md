@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal
 **Module:** Collections Framework — Part 1 (List, Set, Queue, Iteration Patterns, Performance Benchmarking)  
 **Deliverables:** Waitlist & Custody Code + Performance Timing Table + Collection Justifications  
-**Location:** `Daily Task/day 7/`
+**Location:** `Daily Task/day-07/`
 
 ---
 

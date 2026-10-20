@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal (JFS-40)
 **Curriculum Modules:** Module 1 (Core Java Fundamentals) & Module 3 (Version Control – Git)  
 **Deliverables:** `ClaimVerificationHierarchy.java`, `BaseEntity.java`, `RoleHierarchy.java`, `MatchStrategy.java`, `README.md`  
-**Location:** `Daily Task/day-5/`
+**Location:** `Daily Task/day-05/`
 
 ---
 

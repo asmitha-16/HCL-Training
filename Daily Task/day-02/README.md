@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal (JFS-40)
 **Curriculum Modules:** Module 1 (Core Java Fundamentals) & Module 3 (Version Control – Git)  
 **Deliverables:** `MonthlyUsageAnalyser.java`, `CampusConstants.java`, `CampusSampleData.java`, `README.md`  
-**Location:** `Daily Task/day-2/`
+**Location:** `Daily Task/day-02/`
 
 ---
 

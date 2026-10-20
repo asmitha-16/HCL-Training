@@ -3,7 +3,7 @@
 ## Project: Campus Lost and Found Portal (JFS-40)
 **Curriculum Modules:** Module 1 (Core Java Fundamentals) & Module 4 (Build Tools, IDE & Debugging)  
 **Deliverables:** `CampusMenuApp.java`, `pom.xml`, `README.md`  
-**Location:** `Daily Task/day-3/`
+**Location:** `Daily Task/day-03/`
 
 ---
 
