@@ -47,44 +47,52 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupPhotoCanvas();
   setupForms();
   setupModals();
+  updateRoleBanners();
   await refreshAllData();
 });
 
 function setupTabs() {
-  const tabs = document.querySelectorAll(".tab-btn");
-  tabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      tabs.forEach(b => {
-        b.classList.remove("active");
-        b.setAttribute("aria-selected", "false");
-      });
-      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-
-      btn.classList.add("active");
-      btn.setAttribute("aria-selected", "true");
-      const targetId = btn.getAttribute("data-tab");
-      const targetPanel = document.getElementById(targetId);
-      if (targetPanel) targetPanel.classList.add("active");
-
-      if (targetId === "matchTab") populateMatchDropdown();
-      else if (targetId === "adminTab") loadAdminAnalytics();
-      else if (targetId === "claimsTab") loadClaimsAndHandovers();
+  const activateTab = (targetId) => {
+    document.querySelectorAll(".tab-btn").forEach(b => {
+      const isMatch = b.getAttribute("data-tab") === targetId;
+      b.classList.toggle("active", isMatch);
+      b.setAttribute("aria-selected", isMatch ? "true" : "false");
     });
-  });
 
-  const selectTab = (tabId) => {
-    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-    if (btn) btn.click();
-    const dashboard = document.getElementById("dashboardSection");
-    if (dashboard) dashboard.scrollIntoView({ behavior: "smooth" });
+    document.querySelectorAll(".nav-link-btn").forEach(b => {
+      b.classList.toggle("active", b.getAttribute("data-tab") === targetId);
+    });
+
+    document.querySelectorAll(".tab-panel").forEach(p => {
+      p.classList.toggle("active", p.id === targetId);
+    });
+
+    if (targetId === "matchTab") populateMatchDropdown();
+    else if (targetId === "adminTab") loadAdminAnalytics();
+    else if (targetId === "claimsTab") loadClaimsAndHandovers();
+
+    if (targetId !== "feedTab") {
+      const dashboard = document.getElementById("dashboardSection");
+      if (dashboard) dashboard.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  document.getElementById("heroLostBtn")?.addEventListener("click", () => selectTab("reportLostTab"));
-  document.getElementById("heroFoundBtn")?.addEventListener("click", () => selectTab("logFoundTab"));
-  document.getElementById("heroDashboardBtn")?.addEventListener("click", () => selectTab("feedTab"));
-  document.getElementById("stepCard1")?.addEventListener("click", () => selectTab("reportLostTab"));
-  document.getElementById("stepCard2")?.addEventListener("click", () => selectTab("matchTab"));
-  document.getElementById("stepCard3")?.addEventListener("click", () => selectTab("claimsTab"));
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => activateTab(btn.getAttribute("data-tab")));
+  });
+
+  document.querySelectorAll(".nav-link-btn").forEach(btn => {
+    btn.addEventListener("click", () => activateTab(btn.getAttribute("data-tab")));
+  });
+
+  window.selectTab = activateTab;
+
+  document.getElementById("heroLostBtn")?.addEventListener("click", () => activateTab("reportLostTab"));
+  document.getElementById("heroFoundBtn")?.addEventListener("click", () => activateTab("logFoundTab"));
+  document.getElementById("heroDashboardBtn")?.addEventListener("click", () => activateTab("feedTab"));
+  document.getElementById("stepCard1")?.addEventListener("click", () => activateTab("reportLostTab"));
+  document.getElementById("stepCard2")?.addEventListener("click", () => activateTab("matchTab"));
+  document.getElementById("stepCard3")?.addEventListener("click", () => activateTab("claimsTab"));
 
   document.querySelectorAll(".seg-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -106,6 +114,35 @@ function setupTabs() {
   });
 }
 
+
+function updateRoleBanners() {
+  const claimsBanner = document.getElementById("claimsRoleBanner");
+  if (claimsBanner) {
+    if (STATE.activeRole === "STUDENT_STAFF") {
+      claimsBanner.innerHTML = `<span>👤 Viewing as <strong>${escapeHtml(STATE.activeUserName)}</strong>. Only Security Desk can verify & approve claims or record handovers.</span> <button class="btn btn-secondary btn-sm" onclick="switchToPersona('USR-SEC-01')">🛡️ Switch to Officer Dan (Security Desk)</button>`;
+    } else {
+      claimsBanner.innerHTML = `<span>🛡️ Active Persona: <strong>${escapeHtml(STATE.activeUserName)}</strong>. Authorized to review verification questions, approve claims (FR6), and execute physical handovers (FR5).</span>`;
+    }
+  }
+
+  const adminBanner = document.getElementById("adminRoleBanner");
+  if (adminBanner) {
+    if (STATE.activeRole !== "ADMIN") {
+      adminBanner.innerHTML = `<span>⚡ Viewing as <strong>${escapeHtml(STATE.activeUserName)}</strong>. Switch to Campus Admin for complete KPI recovery analytics and immutable audit logs:</span> <button class="btn btn-secondary btn-sm" onclick="switchToPersona('USR-ADM-01')">⚡ Switch to Dr. Eleanor Vance (Campus Admin)</button>`;
+    } else {
+      adminBanner.innerHTML = `<span>⚡ Active Persona: <strong>${escapeHtml(STATE.activeUserName)}</strong>. Campus Administrator privileges active.</span>`;
+    }
+  }
+}
+
+window.switchToPersona = function(userId) {
+  const selector = document.getElementById("roleSelector");
+  if (selector) {
+    selector.value = userId;
+    selector.dispatchEvent(new Event("change"));
+  }
+};
+
 function setupRoleSwitcher() {
   const selector = document.getElementById("roleSelector");
   selector?.addEventListener("change", (e) => {
@@ -115,6 +152,7 @@ function setupRoleSwitcher() {
     else if (STATE.activeUserId.includes("SEC")) STATE.activeRole = "SECURITY_DESK";
     else STATE.activeRole = "STUDENT_STAFF";
 
+    updateRoleBanners();
     renderFeed();
     loadNotifications();
     if (document.getElementById("claimsTab")?.classList.contains("active")) {
@@ -335,6 +373,35 @@ function setupPhotoCanvas() {
   document.getElementById("usePresetPhotoBtn")?.addEventListener("click", () => {
     drawCanvas(toggle.checked);
   });
+
+  const fileInput = document.getElementById("photoFileInput");
+  fileInput?.addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, 400, 250);
+          ctx.drawImage(img, 0, 0, 400, 250);
+          if (toggle && toggle.checked) {
+            ctx.fillStyle = "rgba(225, 29, 72, 0.88)";
+            ctx.beginPath();
+            ctx.roundRect(70, 85, 260, 50, 6);
+            ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 13px system-ui";
+            ctx.textAlign = "center";
+            ctx.fillText("🛡️ SENSITIVE DETAILS OBSCURED", 200, 110);
+            ctx.font = "11px system-ui";
+            ctx.fillText("NFR-P1 Privacy Shield · Verify at Desk", 200, 126);
+          }
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 }
 
 function setupForms() {
@@ -363,10 +430,10 @@ function setupForms() {
         body: JSON.stringify(payload)
       });
       const data = await resp.json();
-      alert(`? Lost Item Report Registered Successfully! (ID: ${data.id})\nAuto-matching engine will scan candidate items.`);
+      alert(`✓ Lost Item Report Registered Successfully! (ID: ${data.id})\nAuto-matching engine will now evaluate candidate matches in < 1s.`);
       document.getElementById("lostItemForm").reset();
       await refreshAllData();
-      document.querySelector('[data-tab="feedTab"]')?.click();
+      evaluateReportMatches(data.id);
     } catch (err) {
       alert("Failed to report lost item: " + err.message);
     }
@@ -404,7 +471,7 @@ function setupForms() {
       alert(`✓ Found Item Secured! (ID: ${data.id}, Custody Locker: ${data.custodyLockerId})\n60-day expiry rule active.`);
       document.getElementById("foundItemForm").reset();
       await refreshAllData();
-      document.querySelector('[data-tab="feedTab"]')?.click();
+      evaluateReportMatches(data.id);
     } catch (err) {
       alert("Failed to log found item: " + err.message);
     }

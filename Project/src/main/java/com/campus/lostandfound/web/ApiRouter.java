@@ -112,21 +112,32 @@ public class ApiRouter {
 
             if ("POST".equalsIgnoreCase(method) && ("/api/items/lost".equals(path) || "/api/v1/lost".equals(path))) {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
-                LocalDate lostDate = data.containsKey("lostDate") && !data.get("lostDate").isBlank()
-                        ? LocalDate.parse(data.get("lostDate"))
+                String lDateStr = data.get("lostDate");
+                if (lDateStr == null || lDateStr.isBlank()) lDateStr = data.get("date");
+                LocalDate lostDate = (lDateStr != null && !lDateStr.isBlank())
+                        ? LocalDate.parse(lDateStr)
                         : LocalDate.now();
 
+                String cat = data.get("categoryCode");
+                if (cat == null || cat.isBlank()) cat = data.get("category");
+                if (cat == null || cat.isBlank()) cat = data.get("categoryId");
+                if (cat == null || cat.isBlank()) cat = "ELECTRONICS";
+
+                String loc = data.get("locationId");
+                if (loc == null || loc.isBlank()) loc = data.get("location");
+                if (loc == null || loc.isBlank()) loc = "LOC-LIB-02";
+
                 ItemFactory.CreateLostReportCommand cmd = new ItemFactory.CreateLostReportCommand(
-                        data.get("title"),
-                        data.get("description"),
-                        data.get("categoryCode"),
-                        data.get("locationId"),
+                        data.getOrDefault("title", "Untitled Lost Item"),
+                        data.getOrDefault("description", ""),
+                        cat,
+                        loc,
                         lostDate,
-                        data.get("brand"),
-                        data.get("color"),
-                        data.get("distinctiveFeatures"),
-                        data.get("contactPhone"),
-                        data.get("contactEmail"),
+                        data.getOrDefault("brand", ""),
+                        data.getOrDefault("color", ""),
+                        data.getOrDefault("distinctiveFeatures", ""),
+                        data.getOrDefault("contactPhone", ""),
+                        data.getOrDefault("contactEmail", ""),
                         data.getOrDefault("reporterUserId", "USR-STU-01"),
                         data.getOrDefault("reporterName", "Student/Staff")
                 );
@@ -148,21 +159,35 @@ public class ApiRouter {
 
             if ("POST".equalsIgnoreCase(method) && ("/api/items/found".equals(path) || "/api/v1/found".equals(path))) {
                 Map<String, String> data = JsonUtil.parseSimpleJson(body);
-                LocalDate foundDate = data.containsKey("foundDate") && !data.get("foundDate").isBlank()
-                        ? LocalDate.parse(data.get("foundDate"))
+                String fDateStr = data.get("foundDate");
+                if (fDateStr == null || fDateStr.isBlank()) fDateStr = data.get("date");
+                LocalDate foundDate = (fDateStr != null && !fDateStr.isBlank())
+                        ? LocalDate.parse(fDateStr)
                         : LocalDate.now();
+
+                String cat = data.get("categoryCode");
+                if (cat == null || cat.isBlank()) cat = data.get("category");
+                if (cat == null || cat.isBlank()) cat = data.get("categoryId");
+                if (cat == null || cat.isBlank()) cat = "ELECTRONICS";
+
+                String loc = data.get("locationId");
+                if (loc == null || loc.isBlank()) loc = data.get("location");
+                if (loc == null || loc.isBlank()) loc = "LOC-LIB-02";
+
+                String locker = data.get("custodyLockerId");
+                if (locker == null || locker.isBlank()) locker = "LOCKER-SEC-" + (new Random().nextInt(90) + 10);
 
                 boolean hasSensitive = "true".equalsIgnoreCase(data.get("hasSensitiveMasking")) || "true".equalsIgnoreCase(data.get("maskSensitive"));
 
                 ItemFactory.CreateFoundItemCommand cmd = new ItemFactory.CreateFoundItemCommand(
-                        data.get("title"),
-                        data.get("description"),
-                        data.get("categoryCode"),
-                        data.get("locationId"),
+                        data.getOrDefault("title", "Untitled Found Item"),
+                        data.getOrDefault("description", ""),
+                        cat,
+                        loc,
                         foundDate,
-                        data.get("brand"),
-                        data.get("color"),
-                        data.get("custodyLockerId"),
+                        data.getOrDefault("brand", ""),
+                        data.getOrDefault("color", ""),
+                        locker,
                         data.getOrDefault("loggedByUserId", "USR-SEC-01"),
                         data.getOrDefault("loggedByRole", "SECURITY_DESK"),
                         data.get("photoUrl"),

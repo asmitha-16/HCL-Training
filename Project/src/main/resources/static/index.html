@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Campus Lost & Found Platform | Enterprise Recovery System</title>
-  <link rel="stylesheet" href="styles.css?v=3.5">
+  <link rel="stylesheet" href="styles.css?v=5.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,6 +16,16 @@
       <div class="brand">
         <h1 class="brand-title">Lost &amp; Found</h1>
       </div>
+
+      <!-- Quick Section Navigation -->
+      <nav class="header-nav" aria-label="Main Navigation">
+        <button class="nav-link-btn active" data-tab="feedTab">Feed</button>
+        <button class="nav-link-btn" data-tab="reportLostTab">Report Lost</button>
+        <button class="nav-link-btn" data-tab="logFoundTab">Log Found</button>
+        <button class="nav-link-btn" data-tab="matchTab">Auto-Matches</button>
+        <button class="nav-link-btn" data-tab="claimsTab">Claims &amp; Desk</button>
+        <button class="nav-link-btn" data-tab="adminTab">Admin</button>
+      </nav>
 
       <!-- Header Controls: Dashboard Link, Persona Switcher, Notifications -->
       <div class="header-controls">
@@ -363,6 +373,8 @@
         </div>
       </div>
 
+      <div id="claimsRoleBanner" class="role-notice-banner"></div>
+
       <div class="claims-layout">
         <!-- Claims Queue -->
         <div class="claims-column">
@@ -402,6 +414,8 @@
           </button>
         </div>
       </div>
+
+      <div id="adminRoleBanner" class="role-notice-banner"></div>
 
       <!-- KPI Metric Cards -->
       <div class="kpi-grid">
@@ -604,6 +618,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=3.5"></script>
+  <script src="app.js?v=5.0"></script>
 </body>
 </html>
